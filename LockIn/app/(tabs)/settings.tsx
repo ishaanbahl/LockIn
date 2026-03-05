@@ -1,0 +1,217 @@
+import React from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  Alert,
+  Switch,
+} from "react-native";
+import { useTaskStore } from "../../store/taskStore";
+import { useAppStore } from "../../store/appStore";
+import { screenTimeService } from "../../services/screenTime";
+import { requestNotificationPermissions, scheduleMorningSummary } from "../../services/notifications";
+import { Colors, Spacing, FontSize, BorderRadius } from "../../constants/theme";
+
+export default function SettingsScreen() {
+  const clearCompleted = useTaskStore((s) => s.clearCompleted);
+  const isDailyResetEnabled = useAppStore((s) => s.isDailyResetEnabled);
+  const setDailyReset = useAppStore((s) => s.setDailyReset);
+
+  const handleScreenTimeAuth = async () => {
+    const granted = await screenTimeService.requestAuthorization();
+    Alert.alert(
+      granted ? "Authorized ✅" : "Not Authorized",
+      granted
+        ? "Screen Time access granted. You can now block apps."
+        : "Screen Time access is required to block apps. Please enable it in Settings."
+    );
+  };
+
+  const handlePickApps = async () => {
+    await screenTimeService.presentAppPicker();
+  };
+
+  const handleEnableNotifications = async () => {
+    const granted = await requestNotificationPermissions();
+    if (granted) {
+      await scheduleMorningSummary(8, 0);
+      Alert.alert("Notifications Enabled ✅", "You'll get morning summaries and task reminders.");
+    } else {
+      Alert.alert(
+        "Notifications Disabled",
+        "Enable notifications in Settings to receive task reminders."
+      );
+    }
+  };
+
+  return (
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      {/* Screen Time Section */}
+      <Text style={styles.sectionTitle}>App Blocking</Text>
+
+      <SettingsButton
+        title="Grant Screen Time Access"
+        subtitle="Required to block distracting apps"
+        onPress={handleScreenTimeAuth}
+      />
+      <SettingsButton
+        title="Choose Apps to Block"
+        subtitle="Pick which apps to restrict until tasks are done"
+        onPress={handlePickApps}
+      />
+
+      {/* Notifications Section */}
+      <Text style={styles.sectionTitle}>Notifications</Text>
+
+      <SettingsButton
+        title="Enable Reminders"
+        subtitle="Get nudged when you have incomplete tasks"
+        onPress={handleEnableNotifications}
+      />
+
+      {/* Tasks Section */}
+      <Text style={styles.sectionTitle}>Tasks</Text>
+
+      <View style={styles.toggleRow}>
+        <View style={styles.toggleContent}>
+          <Text style={styles.buttonTitle}>Daily Reset</Text>
+          <Text style={styles.buttonSubtitle}>
+            Auto-clear completed tasks at midnight
+          </Text>
+        </View>
+        <Switch
+          value={isDailyResetEnabled}
+          onValueChange={setDailyReset}
+          trackColor={{ false: Colors.border, true: Colors.primary }}
+          thumbColor={Colors.textPrimary}
+        />
+      </View>
+
+      <SettingsButton
+        title="Clear Completed Tasks"
+        subtitle="Remove all checked-off tasks"
+        onPress={() =>
+          Alert.alert(
+            "Clear Completed?",
+            "This will remove all completed tasks.",
+            [
+              { text: "Cancel", style: "cancel" },
+              { text: "Clear", style: "destructive", onPress: clearCompleted },
+            ]
+          )
+        }
+        destructive
+      />
+
+      {/* About */}
+      <Text style={styles.sectionTitle}>About</Text>
+      <View style={styles.aboutCard}>
+        <Text style={styles.aboutName}>LockIn</Text>
+        <Text style={styles.aboutVersion}>Version 1.0.0</Text>
+        <Text style={styles.aboutTagline}>Finish your tasks before you scroll.</Text>
+      </View>
+    </ScrollView>
+  );
+}
+
+function SettingsButton({
+  title,
+  subtitle,
+  onPress,
+  destructive = false,
+}: {
+  title: string;
+  subtitle: string;
+  onPress: () => void;
+  destructive?: boolean;
+}) {
+  return (
+    <TouchableOpacity
+      style={styles.button}
+      onPress={onPress}
+      activeOpacity={0.7}
+    >
+      <Text style={[styles.buttonTitle, destructive && styles.destructiveText]}>
+        {title}
+      </Text>
+      <Text style={styles.buttonSubtitle}>{subtitle}</Text>
+    </TouchableOpacity>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Colors.background,
+  },
+  content: {
+    padding: Spacing.md,
+    paddingBottom: Spacing.xxl,
+  },
+  sectionTitle: {
+    color: Colors.textSecondary,
+    fontSize: FontSize.xs,
+    fontWeight: "700",
+    textTransform: "uppercase",
+    letterSpacing: 1,
+    marginTop: Spacing.lg,
+    marginBottom: Spacing.sm,
+    marginLeft: Spacing.xs,
+  },
+  button: {
+    backgroundColor: Colors.surface,
+    borderRadius: BorderRadius.md,
+    padding: Spacing.md,
+    marginBottom: Spacing.sm,
+  },
+  buttonTitle: {
+    color: Colors.textPrimary,
+    fontSize: FontSize.md,
+    fontWeight: "600",
+    marginBottom: 2,
+  },
+  buttonSubtitle: {
+    color: Colors.textMuted,
+    fontSize: FontSize.sm,
+  },
+  destructiveText: {
+    color: Colors.danger,
+  },
+  toggleRow: {
+    backgroundColor: Colors.surface,
+    borderRadius: BorderRadius.md,
+    padding: Spacing.md,
+    marginBottom: Spacing.sm,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  toggleContent: {
+    flex: 1,
+    marginRight: Spacing.md,
+  },
+  aboutCard: {
+    backgroundColor: Colors.surface,
+    borderRadius: BorderRadius.md,
+    padding: Spacing.lg,
+    alignItems: "center",
+  },
+  aboutName: {
+    color: Colors.primary,
+    fontSize: FontSize.xl,
+    fontWeight: "800",
+  },
+  aboutVersion: {
+    color: Colors.textMuted,
+    fontSize: FontSize.sm,
+    marginTop: 2,
+  },
+  aboutTagline: {
+    color: Colors.textSecondary,
+    fontSize: FontSize.sm,
+    marginTop: Spacing.sm,
+    fontStyle: "italic",
+  },
+});
