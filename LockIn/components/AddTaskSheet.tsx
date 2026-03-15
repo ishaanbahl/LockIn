@@ -109,16 +109,15 @@ export function AddTaskSheet({ visible, onClose, onAdd }: AddTaskSheetProps) {
               ]}
               onPress={() => {
                 if (!selectedTime) {
-                  // Default to 1 hour from now
+                  // Default to 11:59 PM today
                   const defaultTime = new Date();
-                  defaultTime.setHours(defaultTime.getHours() + 1, 0, 0, 0);
+                  defaultTime.setHours(23, 55, 0, 0);
                   setSelectedTime(defaultTime);
                 }
                 setShowTimePicker(!showTimePicker);
               }}
               activeOpacity={0.7}
             >
-              <Text style={styles.clockIcon}>🕐</Text>
               <Text
                 style={[
                   styles.timeButtonText,
@@ -263,7 +262,7 @@ const styles = StyleSheet.create({
     opacity: 0.4,
   },
   addButtonText: {
-    color: Colors.textPrimary,
+    color: Colors.surface, // White text to contrast with black button
     fontSize: FontSize.sm,
     fontWeight: "700",
   },

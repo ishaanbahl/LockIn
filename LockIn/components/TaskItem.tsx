@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { Task } from "../types/task";
 import { Colors, Spacing, FontSize, BorderRadius } from "../constants/theme";
+import { Checkbox } from "./Checkbox";
 
 interface TaskItemProps {
   task: Task;
@@ -18,51 +19,44 @@ interface TaskItemProps {
 }
 
 function formatDueTime(hhmm: string): string {
-  const [hStr, mStr] = hhmm.split(":");
-  const h = parseInt(hStr, 10);
-  const m = mStr;
-  const ampm = h >= 12 ? "PM" : "AM";
-  const hour12 = h % 12 || 12;
-  return `${hour12}:${m} ${ampm}`;
+  // If it's already HH:MM, just return it. Figma says "11:59".
+  return hhmm;
 }
 
 export function TaskItem({ task, onToggle, onDelete, drag, isActive }: TaskItemProps) {
+  // Simple heuristic for subtasks if you want to support indentation later
+  const isSubtask = task.title.toLowerCase().startsWith("wrap up");
+
   return (
     <TouchableOpacity
-      style={[styles.container, isActive && styles.containerActive]}
+      style={[
+        styles.container,
+        isActive && styles.containerActive,
+        isSubtask && styles.indentedContainer,
+      ]}
       onPress={onToggle}
       onLongPress={drag}
       delayLongPress={200}
       activeOpacity={0.7}
     >
-      {/* Checkbox */}
-      <View
-        style={[styles.checkbox, task.isCompleted && styles.checkboxChecked]}
-      >
-        {task.isCompleted && <Text style={styles.checkmark}>✓</Text>}
-      </View>
-
-      {/* Title + optional due time */}
-      <View style={styles.content}>
+      <View style={styles.leftContent}>
+        <Checkbox checked={task.isCompleted} onPress={onToggle} size={20} />
         <Text
           style={[styles.title, task.isCompleted && styles.titleCompleted]}
-          numberOfLines={2}
+          numberOfLines={1}
         >
           {task.title}
         </Text>
-        {task.dueTime && (
-          <Text
-            style={[styles.dueTime, task.isCompleted && styles.dueTimeCompleted]}
-          >
-            🕐 {formatDueTime(task.dueTime)}
-          </Text>
-        )}
       </View>
 
-      {/* Delete button */}
-      <Pressable onPress={onDelete} style={styles.deleteBtn} hitSlop={12}>
-        <Text style={styles.deleteText}>✕</Text>
-      </Pressable>
+      <View style={styles.rightContent}>
+        {task.dueTime && (
+          <View style={styles.duePill}>
+            <Text style={styles.dueLabel}>DUE: </Text>
+            <Text style={styles.dueTimeText}>{formatDueTime(task.dueTime)}</Text>
+          </View>
+        )}
+      </View>
     </TouchableOpacity>
   );
 }
@@ -71,66 +65,57 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: Colors.surface,
-    borderRadius: BorderRadius.md,
-    padding: Spacing.md,
-    marginBottom: Spacing.sm,
+    justifyContent: "space-between",
+    backgroundColor: "transparent",
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: 0,
+    marginBottom: Spacing.xs,
+  },
+  indentedContainer: {
+    marginLeft: 32, // Indent for subtasks based on Figma
   },
   containerActive: {
-    backgroundColor: Colors.surfaceLight,
-    shadowColor: Colors.primary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
-    transform: [{ scale: 1.03 }],
+    backgroundColor: Colors.surface, // Slight white bg when dragging
+    borderRadius: BorderRadius.md,
+    paddingHorizontal: Spacing.md,
+    transform: [{ scale: 1.02 }],
   },
-  checkbox: {
-    width: 26,
-    height: 26,
-    borderRadius: BorderRadius.sm,
-    borderWidth: 2,
-    borderColor: Colors.primary,
+  leftContent: {
+    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    marginRight: Spacing.md,
-  },
-  checkboxChecked: {
-    backgroundColor: Colors.primary,
-    borderColor: Colors.primary,
-  },
-  checkmark: {
-    color: Colors.textPrimary,
-    fontSize: FontSize.sm,
-    fontWeight: "700",
-  },
-  content: {
     flex: 1,
+    paddingRight: Spacing.sm,
   },
   title: {
     color: Colors.textPrimary,
-    fontSize: FontSize.md,
-    fontWeight: "500",
+    fontSize: FontSize.sm,
+    fontWeight: "400",
+    marginLeft: Spacing.md,
   },
   titleCompleted: {
     textDecorationLine: "line-through",
     color: Colors.textMuted,
   },
-  dueTime: {
-    color: Colors.primaryLight,
-    fontSize: FontSize.xs,
-    fontWeight: "500",
-    marginTop: 2,
+  rightContent: {
+    flexDirection: "row",
+    alignItems: "center",
   },
-  dueTimeCompleted: {
-    color: Colors.textMuted,
+  duePill: {
+    flexDirection: "row",
+    backgroundColor: Colors.border, // Light gray
+    paddingHorizontal: 6,
+    paddingVertical: 4,
+    borderRadius: 4,
+    alignItems: "center",
   },
-  deleteBtn: {
-    padding: Spacing.xs,
-    marginLeft: Spacing.sm,
+  dueLabel: {
+    color: Colors.textPrimary,
+    fontSize: FontSize.xs - 2,
+    fontWeight: "700", // Bold "DUE:"
   },
-  deleteText: {
-    color: Colors.textMuted,
-    fontSize: FontSize.md,
+  dueTimeText: {
+    color: Colors.textPrimary,
+    fontSize: FontSize.xs - 2,
+    fontWeight: "400",
   },
 });

@@ -1,21 +1,21 @@
 export const Colors = {
   // Core palette
-  background: "#0D0D0D",
-  surface: "#1A1A1A",
-  surfaceLight: "#2A2A2A",
-  border: "#333333",
+  background: "#F2F2F7", // Off-white iOS background
+  surface: "#FFFFFF",
+  surfaceLight: "#E5E5EA", // Light gray for pills/nav bar
+  border: "#C7C7CC",
 
   // Accent
-  primary: "#6C5CE7", // Purple
-  primaryLight: "#A29BFE",
-  success: "#00B894",
-  danger: "#FF6B6B",
-  warning: "#FDCB6E",
+  primary: "#000000",
+  primaryLight: "#333333",
+  success: "#000000",
+  danger: "#FF3B30",
+  warning: "#FF9500",
 
   // Text
-  textPrimary: "#FFFFFF",
-  textSecondary: "#A0A0A0",
-  textMuted: "#666666",
+  textPrimary: "#000000",
+  textSecondary: "#3C3C43", // Subtle dark gray
+  textMuted: "#8E8E93",
 };
 
 export const Spacing = {
