@@ -3,50 +3,50 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 63;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
-		6AAC76AB2F54AC2100CB6132 /* ManagedSettings.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AE010602F510CC700A76A89 /* ManagedSettings.framework */; };
-		6AAC76AC2F54AC2100CB6132 /* ManagedSettingsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AE010622F510CC700A76A89 /* ManagedSettingsUI.framework */; };
-		6AAC76B42F54AC2100CB6132 /* ShieldConfiguration.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6AAC76AA2F54AC2100CB6132 /* ShieldConfiguration.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		6AAC76CF2F54D4BA00CB6132 /* ManagedSettings.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AE010602F510CC700A76A89 /* ManagedSettings.framework */; };
-		6AAC76D72F54D4BA00CB6132 /* ShieldAction.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6AAC76CE2F54D4BA00CB6132 /* ShieldAction.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		A52CF8AB2871E19EDCC69817 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 94CEE25202A639DAD1A8E862 /* PrivacyInfo.xcprivacy */; };
+		6407B0889E0576BE356A61F5 /* libPods-LockIn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 461E03596B5E05D0B8A36A6E /* libPods-LockIn.a */; };
+		6AAC76E22F5A43B600CB6132 /* ManagedSettings.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AAC76E12F5A43B600CB6132 /* ManagedSettings.framework */; };
+		6AAC76E42F5A43B600CB6132 /* ManagedSettingsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AAC76E32F5A43B600CB6132 /* ManagedSettingsUI.framework */; };
+		6AAC76EC2F5A43B600CB6132 /* ShieldConfiguration.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6AAC76E02F5A43B600CB6132 /* ShieldConfiguration.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		6AAC76F72F5A447500CB6132 /* ManagedSettings.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AAC76E12F5A43B600CB6132 /* ManagedSettings.framework */; };
+		6AAC76FF2F5A447500CB6132 /* ShieldAction.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6AAC76F62F5A447500CB6132 /* ShieldAction.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
-		DE29F998E4155E8700C3191B /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8AF3332830AF177401B6C8 /* ExpoModulesProvider.swift */; };
-		EE98198D64C69AFD6B54E629 /* libPods-LockIn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD0E1918F3DE64FC62672DE3 /* libPods-LockIn.a */; };
+		E93D625545A13B9958BBAF49 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 246F901E2BEC9F3A6FD589C6 /* PrivacyInfo.xcprivacy */; };
 		F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11748412D0307B40044C1D9 /* AppDelegate.swift */; };
+		F79486B979B327BDD9A4A172 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34BD7D6385A92AFD5F6A2A9C /* ExpoModulesProvider.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		6AAC76B22F54AC2100CB6132 /* PBXContainerItemProxy */ = {
+		6AAC76EA2F5A43B600CB6132 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 6AAC76A92F54AC2100CB6132;
+			remoteGlobalIDString = 6AAC76DF2F5A43B600CB6132;
 			remoteInfo = ShieldConfiguration;
 		};
-		6AAC76D52F54D4BA00CB6132 /* PBXContainerItemProxy */ = {
+		6AAC76FD2F5A447500CB6132 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 6AAC76CD2F54D4BA00CB6132;
+			remoteGlobalIDString = 6AAC76F52F5A447500CB6132;
 			remoteInfo = ShieldAction;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		6AE010702F510CC700A76A89 /* Embed Foundation Extensions */ = {
+		6AAC76ED2F5A43B600CB6132 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				6AAC76B42F54AC2100CB6132 /* ShieldConfiguration.appex in Embed Foundation Extensions */,
-				6AAC76D72F54D4BA00CB6132 /* ShieldAction.appex in Embed Foundation Extensions */,
+				6AAC76EC2F5A43B600CB6132 /* ShieldConfiguration.appex in Embed Foundation Extensions */,
+				6AAC76FF2F5A447500CB6132 /* ShieldAction.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -57,16 +57,16 @@
 		13B07F961A680F5B00A75B9A /* LockIn.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LockIn.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = LockIn/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = LockIn/Info.plist; sourceTree = "<group>"; };
-		2F21C1A54F9D9B499B19245D /* Pods-LockIn.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LockIn.release.xcconfig"; path = "Target Support Files/Pods-LockIn/Pods-LockIn.release.xcconfig"; sourceTree = "<group>"; };
-		6AAC76AA2F54AC2100CB6132 /* ShieldConfiguration.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ShieldConfiguration.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		6AAC76CE2F54D4BA00CB6132 /* ShieldAction.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ShieldAction.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		6AE010602F510CC700A76A89 /* ManagedSettings.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ManagedSettings.framework; path = System/Library/Frameworks/ManagedSettings.framework; sourceTree = SDKROOT; };
-		6AE010622F510CC700A76A89 /* ManagedSettingsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ManagedSettingsUI.framework; path = System/Library/Frameworks/ManagedSettingsUI.framework; sourceTree = SDKROOT; };
-		6F8AF3332830AF177401B6C8 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-LockIn/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
-		8110044EF785CF29FD2435A4 /* Pods-LockIn.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LockIn.debug.xcconfig"; path = "Target Support Files/Pods-LockIn/Pods-LockIn.debug.xcconfig"; sourceTree = "<group>"; };
-		94CEE25202A639DAD1A8E862 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = LockIn/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		246F901E2BEC9F3A6FD589C6 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = LockIn/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		33EE419BC8FDDAB11878C0BB /* Pods-LockIn.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LockIn.debug.xcconfig"; path = "Target Support Files/Pods-LockIn/Pods-LockIn.debug.xcconfig"; sourceTree = "<group>"; };
+		34BD7D6385A92AFD5F6A2A9C /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-LockIn/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		461E03596B5E05D0B8A36A6E /* libPods-LockIn.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LockIn.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6AAC76E02F5A43B600CB6132 /* ShieldConfiguration.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ShieldConfiguration.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		6AAC76E12F5A43B600CB6132 /* ManagedSettings.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ManagedSettings.framework; path = System/Library/Frameworks/ManagedSettings.framework; sourceTree = SDKROOT; };
+		6AAC76E32F5A43B600CB6132 /* ManagedSettingsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ManagedSettingsUI.framework; path = System/Library/Frameworks/ManagedSettingsUI.framework; sourceTree = SDKROOT; };
+		6AAC76F62F5A447500CB6132 /* ShieldAction.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ShieldAction.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		9E35035ACFF7DA65ADA4529D /* Pods-LockIn.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LockIn.release.xcconfig"; path = "Target Support Files/Pods-LockIn/Pods-LockIn.release.xcconfig"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = LockIn/SplashScreen.storyboard; sourceTree = "<group>"; };
-		AD0E1918F3DE64FC62672DE3 /* libPods-LockIn.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LockIn.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F11748412D0307B40044C1D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = LockIn/AppDelegate.swift; sourceTree = "<group>"; };
@@ -74,25 +74,47 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		6AAC76B52F54AC2100CB6132 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		6AAC76F02F5A43B600CB6132 /* Exceptions for "ShieldConfiguration" folder in "ShieldConfiguration" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = 6AAC76A92F54AC2100CB6132 /* ShieldConfiguration */;
+			target = 6AAC76DF2F5A43B600CB6132 /* ShieldConfiguration */;
 		};
-		6AAC76DA2F54D4BA00CB6132 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		6AAC77002F5A447500CB6132 /* Exceptions for "ShieldAction" folder in "ShieldAction" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = 6AAC76CD2F54D4BA00CB6132 /* ShieldAction */;
+			target = 6AAC76F52F5A447500CB6132 /* ShieldAction */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		6AAC76AD2F54AC2100CB6132 /* ShieldConfiguration */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (6AAC76B52F54AC2100CB6132 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = ShieldConfiguration; sourceTree = "<group>"; };
-		6AAC76D02F54D4BA00CB6132 /* ShieldAction */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (6AAC76DA2F54D4BA00CB6132 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = ShieldAction; sourceTree = "<group>"; };
+		6AAC76E52F5A43B600CB6132 /* ShieldConfiguration */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				6AAC76F02F5A43B600CB6132 /* Exceptions for "ShieldConfiguration" folder in "ShieldConfiguration" target */,
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = ShieldConfiguration;
+			sourceTree = "<group>";
+		};
+		6AAC76F82F5A447500CB6132 /* ShieldAction */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				6AAC77002F5A447500CB6132 /* Exceptions for "ShieldAction" folder in "ShieldAction" target */,
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = ShieldAction;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,24 +122,24 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EE98198D64C69AFD6B54E629 /* libPods-LockIn.a in Frameworks */,
+				6407B0889E0576BE356A61F5 /* libPods-LockIn.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		6AAC76A72F54AC2100CB6132 /* Frameworks */ = {
+		6AAC76DD2F5A43B600CB6132 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6AAC76AB2F54AC2100CB6132 /* ManagedSettings.framework in Frameworks */,
-				6AAC76AC2F54AC2100CB6132 /* ManagedSettingsUI.framework in Frameworks */,
+				6AAC76E22F5A43B600CB6132 /* ManagedSettings.framework in Frameworks */,
+				6AAC76E42F5A43B600CB6132 /* ManagedSettingsUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		6AAC76CB2F54D4BA00CB6132 /* Frameworks */ = {
+		6AAC76F32F5A447500CB6132 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6AAC76CF2F54D4BA00CB6132 /* ManagedSettings.framework in Frameworks */,
+				6AAC76F72F5A447500CB6132 /* ManagedSettings.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -133,16 +155,16 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				94CEE25202A639DAD1A8E862 /* PrivacyInfo.xcprivacy */,
+				246F901E2BEC9F3A6FD589C6 /* PrivacyInfo.xcprivacy */,
 			);
 			name = LockIn;
 			sourceTree = "<group>";
 		};
-		1FC8D9679F41BB8B975B4605 /* Pods */ = {
+		1F975C759BA3F00F90D39AB6 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				8110044EF785CF29FD2435A4 /* Pods-LockIn.debug.xcconfig */,
-				2F21C1A54F9D9B499B19245D /* Pods-LockIn.release.xcconfig */,
+				33EE419BC8FDDAB11878C0BB /* Pods-LockIn.debug.xcconfig */,
+				9E35035ACFF7DA65ADA4529D /* Pods-LockIn.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -151,25 +173,17 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				AD0E1918F3DE64FC62672DE3 /* libPods-LockIn.a */,
-				6AE010602F510CC700A76A89 /* ManagedSettings.framework */,
-				6AE010622F510CC700A76A89 /* ManagedSettingsUI.framework */,
+				461E03596B5E05D0B8A36A6E /* libPods-LockIn.a */,
+				6AAC76E12F5A43B600CB6132 /* ManagedSettings.framework */,
+				6AAC76E32F5A43B600CB6132 /* ManagedSettingsUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		2E1244D93E6A1B775D468903 /* LockIn */ = {
+		2D806B0F6A2FD4A2AC562663 /* ExpoModulesProviders */ = {
 			isa = PBXGroup;
 			children = (
-				6F8AF3332830AF177401B6C8 /* ExpoModulesProvider.swift */,
-			);
-			name = LockIn;
-			sourceTree = "<group>";
-		};
-		472E3A8B6D3D9C1164D387BF /* ExpoModulesProviders */ = {
-			isa = PBXGroup;
-			children = (
-				2E1244D93E6A1B775D468903 /* LockIn */,
+				AC71FD204E739153165C0BBD /* LockIn */,
 			);
 			name = ExpoModulesProviders;
 			sourceTree = "<group>";
@@ -186,12 +200,12 @@
 			children = (
 				13B07FAE1A68108700A75B9A /* LockIn */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
-				6AAC76AD2F54AC2100CB6132 /* ShieldConfiguration */,
-				6AAC76D02F54D4BA00CB6132 /* ShieldAction */,
+				6AAC76E52F5A43B600CB6132 /* ShieldConfiguration */,
+				6AAC76F82F5A447500CB6132 /* ShieldAction */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				1FC8D9679F41BB8B975B4605 /* Pods */,
-				472E3A8B6D3D9C1164D387BF /* ExpoModulesProviders */,
+				1F975C759BA3F00F90D39AB6 /* Pods */,
+				2D806B0F6A2FD4A2AC562663 /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -202,10 +216,18 @@
 			isa = PBXGroup;
 			children = (
 				13B07F961A680F5B00A75B9A /* LockIn.app */,
-				6AAC76AA2F54AC2100CB6132 /* ShieldConfiguration.appex */,
-				6AAC76CE2F54D4BA00CB6132 /* ShieldAction.appex */,
+				6AAC76E02F5A43B600CB6132 /* ShieldConfiguration.appex */,
+				6AAC76F62F5A447500CB6132 /* ShieldAction.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		AC71FD204E739153165C0BBD /* LockIn */ = {
+			isa = PBXGroup;
+			children = (
+				34BD7D6385A92AFD5F6A2A9C /* ExpoModulesProvider.swift */,
+			);
+			name = LockIn;
 			sourceTree = "<group>";
 		};
 		BB2F792B24A3F905000567C9 /* Supporting */ = {
@@ -225,68 +247,64 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "LockIn" */;
 			buildPhases = (
 				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
-				3D0DDF08C88304E3E90765AC /* [Expo] Configure project */,
+				314427B161BC81D02864DA7D /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
-				705E1BEA11D7A360864C2B9F /* [CP] Embed Pods Frameworks */,
-				6AE010702F510CC700A76A89 /* Embed Foundation Extensions */,
+				9B297DE647C27B6992231F6D /* [CP] Embed Pods Frameworks */,
+				6AAC76ED2F5A43B600CB6132 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				6AAC76B32F54AC2100CB6132 /* PBXTargetDependency */,
-				6AAC76D62F54D4BA00CB6132 /* PBXTargetDependency */,
+				6AAC76EB2F5A43B600CB6132 /* PBXTargetDependency */,
+				6AAC76FE2F5A447500CB6132 /* PBXTargetDependency */,
 			);
 			name = LockIn;
 			productName = LockIn;
 			productReference = 13B07F961A680F5B00A75B9A /* LockIn.app */;
 			productType = "com.apple.product-type.application";
 		};
-		6AAC76A92F54AC2100CB6132 /* ShieldConfiguration */ = {
+		6AAC76DF2F5A43B600CB6132 /* ShieldConfiguration */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6AAC76B62F54AC2100CB6132 /* Build configuration list for PBXNativeTarget "ShieldConfiguration" */;
+			buildConfigurationList = 6AAC76F12F5A43B600CB6132 /* Build configuration list for PBXNativeTarget "ShieldConfiguration" */;
 			buildPhases = (
-				6AAC76A62F54AC2100CB6132 /* Sources */,
-				6AAC76A72F54AC2100CB6132 /* Frameworks */,
-				6AAC76A82F54AC2100CB6132 /* Resources */,
+				6AAC76DC2F5A43B600CB6132 /* Sources */,
+				6AAC76DD2F5A43B600CB6132 /* Frameworks */,
+				6AAC76DE2F5A43B600CB6132 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				6AAC76AD2F54AC2100CB6132 /* ShieldConfiguration */,
+				6AAC76E52F5A43B600CB6132 /* ShieldConfiguration */,
 			);
 			name = ShieldConfiguration;
-			packageProductDependencies = (
-			);
 			productName = ShieldConfiguration;
-			productReference = 6AAC76AA2F54AC2100CB6132 /* ShieldConfiguration.appex */;
+			productReference = 6AAC76E02F5A43B600CB6132 /* ShieldConfiguration.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
-		6AAC76CD2F54D4BA00CB6132 /* ShieldAction */ = {
+		6AAC76F52F5A447500CB6132 /* ShieldAction */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6AAC76DB2F54D4BA00CB6132 /* Build configuration list for PBXNativeTarget "ShieldAction" */;
+			buildConfigurationList = 6AAC77012F5A447500CB6132 /* Build configuration list for PBXNativeTarget "ShieldAction" */;
 			buildPhases = (
-				6AAC76CA2F54D4BA00CB6132 /* Sources */,
-				6AAC76CB2F54D4BA00CB6132 /* Frameworks */,
-				6AAC76CC2F54D4BA00CB6132 /* Resources */,
+				6AAC76F22F5A447500CB6132 /* Sources */,
+				6AAC76F32F5A447500CB6132 /* Frameworks */,
+				6AAC76F42F5A447500CB6132 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				6AAC76D02F54D4BA00CB6132 /* ShieldAction */,
+				6AAC76F82F5A447500CB6132 /* ShieldAction */,
 			);
 			name = ShieldAction;
-			packageProductDependencies = (
-			);
 			productName = ShieldAction;
-			productReference = 6AAC76CE2F54D4BA00CB6132 /* ShieldAction.appex */;
+			productReference = 6AAC76F62F5A447500CB6132 /* ShieldAction.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
@@ -301,10 +319,10 @@
 					13B07F861A680F5B00A75B9A = {
 						LastSwiftMigration = 1250;
 					};
-					6AAC76A92F54AC2100CB6132 = {
+					6AAC76DF2F5A43B600CB6132 = {
 						CreatedOnToolsVersion = 26.2;
 					};
-					6AAC76CD2F54D4BA00CB6132 = {
+					6AAC76F52F5A447500CB6132 = {
 						CreatedOnToolsVersion = 26.2;
 					};
 				};
@@ -323,8 +341,8 @@
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* LockIn */,
-				6AAC76A92F54AC2100CB6132 /* ShieldConfiguration */,
-				6AAC76CD2F54D4BA00CB6132 /* ShieldAction */,
+				6AAC76DF2F5A43B600CB6132 /* ShieldConfiguration */,
+				6AAC76F52F5A447500CB6132 /* ShieldAction */,
 			);
 		};
 /* End PBXProject section */
@@ -337,18 +355,18 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				A52CF8AB2871E19EDCC69817 /* PrivacyInfo.xcprivacy in Resources */,
+				E93D625545A13B9958BBAF49 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		6AAC76A82F54AC2100CB6132 /* Resources */ = {
+		6AAC76DE2F5A43B600CB6132 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		6AAC76CC2F54D4BA00CB6132 /* Resources */ = {
+		6AAC76F42F5A447500CB6132 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -397,7 +415,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		3D0DDF08C88304E3E90765AC /* [Expo] Configure project */ = {
+		314427B161BC81D02864DA7D /* [Expo] Configure project */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -421,7 +439,43 @@
 			shellPath = /bin/sh;
 			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-LockIn/expo-configure-project.sh\"\n";
 		};
-		705E1BEA11D7A360864C2B9F /* [CP] Embed Pods Frameworks */ = {
+		800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-LockIn/Pods-LockIn-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/EXApplication/ExpoApplication_privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants/EXConstants.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants/ExpoConstants_privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/EXNotifications/ExpoNotifications_privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/ExpoFileSystem/ExpoFileSystem_privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/RNCAsyncStorage/RNCAsyncStorage_resources.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/React-Core_privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-cxxreact/React-cxxreact_privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/expo-dev-launcher/EXDevLauncher.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/expo-dev-menu/EXDevMenu.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ExpoApplication_privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EXConstants.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ExpoConstants_privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ExpoNotifications_privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ExpoFileSystem_privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RNCAsyncStorage_resources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-Core_privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-cxxreact_privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EXDevLauncher.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EXDevMenu.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-LockIn/Pods-LockIn-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9B297DE647C27B6992231F6D /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -443,38 +497,6 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-LockIn/Pods-LockIn-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-LockIn/Pods-LockIn-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/EXApplication/ExpoApplication_privacy.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants/EXConstants.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants/ExpoConstants_privacy.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/EXNotifications/ExpoNotifications_privacy.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/ExpoFileSystem/ExpoFileSystem_privacy.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/RNCAsyncStorage/RNCAsyncStorage_resources.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/React-Core_privacy.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/React-cxxreact/React-cxxreact_privacy.bundle",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ExpoApplication_privacy.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EXConstants.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ExpoConstants_privacy.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ExpoNotifications_privacy.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ExpoFileSystem_privacy.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RNCAsyncStorage_resources.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-Core_privacy.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-cxxreact_privacy.bundle",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-LockIn/Pods-LockIn-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -483,18 +505,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */,
-				DE29F998E4155E8700C3191B /* ExpoModulesProvider.swift in Sources */,
+				F79486B979B327BDD9A4A172 /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		6AAC76A62F54AC2100CB6132 /* Sources */ = {
+		6AAC76DC2F5A43B600CB6132 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		6AAC76CA2F54D4BA00CB6132 /* Sources */ = {
+		6AAC76F22F5A447500CB6132 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -504,22 +526,22 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		6AAC76B32F54AC2100CB6132 /* PBXTargetDependency */ = {
+		6AAC76EB2F5A43B600CB6132 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 6AAC76A92F54AC2100CB6132 /* ShieldConfiguration */;
-			targetProxy = 6AAC76B22F54AC2100CB6132 /* PBXContainerItemProxy */;
+			target = 6AAC76DF2F5A43B600CB6132 /* ShieldConfiguration */;
+			targetProxy = 6AAC76EA2F5A43B600CB6132 /* PBXContainerItemProxy */;
 		};
-		6AAC76D62F54D4BA00CB6132 /* PBXTargetDependency */ = {
+		6AAC76FE2F5A447500CB6132 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 6AAC76CD2F54D4BA00CB6132 /* ShieldAction */;
-			targetProxy = 6AAC76D52F54D4BA00CB6132 /* PBXContainerItemProxy */;
+			target = 6AAC76F52F5A447500CB6132 /* ShieldAction */;
+			targetProxy = 6AAC76FD2F5A447500CB6132 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8110044EF785CF29FD2435A4 /* Pods-LockIn.debug.xcconfig */;
+			baseConfigurationReference = 33EE419BC8FDDAB11878C0BB /* Pods-LockIn.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -556,7 +578,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2F21C1A54F9D9B499B19245D /* Pods-LockIn.release.xcconfig */;
+			baseConfigurationReference = 9E35035ACFF7DA65ADA4529D /* Pods-LockIn.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -585,7 +607,7 @@
 			};
 			name = Release;
 		};
-		6AAC76B72F54AC2100CB6132 /* Debug */ = {
+		6AAC76EE2F5A43B600CB6132 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -617,6 +639,7 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ishaanbahl.lockin.ShieldConfiguration;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -631,7 +654,7 @@
 			};
 			name = Debug;
 		};
-		6AAC76B82F54AC2100CB6132 /* Release */ = {
+		6AAC76EF2F5A43B600CB6132 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -663,6 +686,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
 				MTL_FAST_MATH = YES;
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ishaanbahl.lockin.ShieldConfiguration;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -676,7 +700,7 @@
 			};
 			name = Release;
 		};
-		6AAC76D82F54D4BA00CB6132 /* Debug */ = {
+		6AAC77022F5A447500CB6132 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -698,7 +722,7 @@
 				INFOPLIST_FILE = ShieldAction/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ShieldAction;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -708,6 +732,7 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ishaanbahl.lockin.ShieldAction;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -722,7 +747,7 @@
 			};
 			name = Debug;
 		};
-		6AAC76D92F54D4BA00CB6132 /* Release */ = {
+		6AAC77032F5A447500CB6132 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -745,7 +770,7 @@
 				INFOPLIST_FILE = ShieldAction/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ShieldAction;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -754,6 +779,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
 				MTL_FAST_MATH = YES;
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ishaanbahl.lockin.ShieldAction;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -897,20 +923,20 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6AAC76B62F54AC2100CB6132 /* Build configuration list for PBXNativeTarget "ShieldConfiguration" */ = {
+		6AAC76F12F5A43B600CB6132 /* Build configuration list for PBXNativeTarget "ShieldConfiguration" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				6AAC76B72F54AC2100CB6132 /* Debug */,
-				6AAC76B82F54AC2100CB6132 /* Release */,
+				6AAC76EE2F5A43B600CB6132 /* Debug */,
+				6AAC76EF2F5A43B600CB6132 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6AAC76DB2F54D4BA00CB6132 /* Build configuration list for PBXNativeTarget "ShieldAction" */ = {
+		6AAC77012F5A447500CB6132 /* Build configuration list for PBXNativeTarget "ShieldAction" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				6AAC76D82F54D4BA00CB6132 /* Debug */,
-				6AAC76D92F54D4BA00CB6132 /* Release */,
+				6AAC77022F5A447500CB6132 /* Debug */,
+				6AAC77032F5A447500CB6132 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

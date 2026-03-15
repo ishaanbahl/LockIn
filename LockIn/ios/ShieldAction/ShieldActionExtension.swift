@@ -8,7 +8,6 @@
 import Foundation
 import ManagedSettings
 
-// Make sure that your class name matches the NSExtensionPrincipalClass in your Info.plist.
 class ShieldActionExtension: ShieldActionDelegate {
 
     private let store = ManagedSettingsStore()
@@ -24,14 +23,8 @@ class ShieldActionExtension: ShieldActionDelegate {
         switch action {
         case .primaryButtonPressed:
             completionHandler(.close)
-
         case .secondaryButtonPressed:
-            removeAllShields()
-            // Small delay so the store change propagates before iOS re-evaluates
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                completionHandler(.defer)
-            }
-
+            bypass(completionHandler: completionHandler)
         @unknown default:
             completionHandler(.close)
         }
@@ -48,10 +41,7 @@ class ShieldActionExtension: ShieldActionDelegate {
         case .primaryButtonPressed:
             completionHandler(.close)
         case .secondaryButtonPressed:
-            removeAllShields()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                completionHandler(.defer)
-            }
+            bypass(completionHandler: completionHandler)
         @unknown default:
             completionHandler(.close)
         }
@@ -68,25 +58,32 @@ class ShieldActionExtension: ShieldActionDelegate {
         case .primaryButtonPressed:
             completionHandler(.close)
         case .secondaryButtonPressed:
-            removeAllShields()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                completionHandler(.defer)
-            }
+            bypass(completionHandler: completionHandler)
         @unknown default:
             completionHandler(.close)
         }
     }
 
-    // MARK: - Remove Shields
+    // MARK: - Bypass Logic
 
-    private func removeAllShields() {
-        store.shield.applications = nil
-        store.shield.applicationCategories = nil
-        store.shield.webDomains = nil
-
-        // Flag so the main app knows to re-apply shields
+    private func bypass(completionHandler: @escaping (ShieldActionResponse) -> Void) {
+        // 1. Set bypass flag FIRST — so ShieldConfigurationExtension
+        //    returns a blank dark screen when iOS re-queries it
         if let defaults = UserDefaults(suiteName: appGroupID) {
             defaults.set(true, forKey: "shieldsBypassed")
+            defaults.synchronize()
+        }
+
+        // 2. Defer FIRST — iOS re-queries ShieldConfigurationExtension,
+        //    which sees the bypass flag and returns an opaque black config.
+        //    This must happen BEFORE clearing shields so iOS actually
+        //    calls our extension instead of showing its default UI.
+        completionHandler(.defer)
+
+        // 3. After a brief delay (giving iOS time to render our dark config),
+        //    clear shields so the overlay dismisses entirely.
+        DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 0.4) { [weak self] in
+            self?.store.clearAllSettings()
         }
     }
 }
