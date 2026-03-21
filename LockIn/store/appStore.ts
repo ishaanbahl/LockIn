@@ -9,28 +9,33 @@ interface AppState {
   isOnboardingComplete: boolean;
   isDailyResetEnabled: boolean;
   isAppReady: boolean;
+  displayName: string;
 
   // Actions
   loadAppState: () => Promise<void>;
   completeOnboarding: () => void;
   resetOnboarding: () => void;
   setDailyReset: (enabled: boolean) => void;
+  setDisplayName: (name: string) => void;
 }
 
 export const useAppStore = create<AppState>((set) => ({
   isOnboardingComplete: false,
   isDailyResetEnabled: false,
   isAppReady: false,
+  displayName: "Ishaan",
 
   loadAppState: async () => {
     try {
-      const [onboarding, dailyReset] = await Promise.all([
+      const [onboarding, dailyReset, displayName] = await Promise.all([
         AsyncStorage.getItem(ONBOARDING_KEY),
         AsyncStorage.getItem(DAILY_RESET_KEY),
+        AsyncStorage.getItem("lockin_display_name"),
       ]);
       set({
         isOnboardingComplete: onboarding === "true",
         isDailyResetEnabled: dailyReset === "true",
+        displayName: displayName || "Ishaan",
         isAppReady: true,
       });
     } catch {
@@ -51,6 +56,11 @@ export const useAppStore = create<AppState>((set) => ({
   setDailyReset: (enabled) => {
     AsyncStorage.setItem(DAILY_RESET_KEY, enabled ? "true" : "false");
     set({ isDailyResetEnabled: enabled });
+  },
+
+  setDisplayName: (name) => {
+    AsyncStorage.setItem("lockin_display_name", name);
+    set({ displayName: name });
   },
 }));
 

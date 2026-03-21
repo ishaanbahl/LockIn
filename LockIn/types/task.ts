@@ -4,4 +4,6 @@ export interface Task {
   isCompleted: boolean;
   dueTime?: string; // "HH:mm" format, optional
   createdAt: string; // ISO string
+  isSubtask?: boolean;
+  color?: string;
 }

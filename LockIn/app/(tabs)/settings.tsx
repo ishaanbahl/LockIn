@@ -18,6 +18,8 @@ export default function SettingsScreen() {
   const clearCompleted = useTaskStore((s) => s.clearCompleted);
   const isDailyResetEnabled = useAppStore((s) => s.isDailyResetEnabled);
   const setDailyReset = useAppStore((s) => s.setDailyReset);
+  const displayName = useAppStore((s) => s.displayName);
+  const setDisplayName = useAppStore((s) => s.setDisplayName);
 
   const handleScreenTimeAuth = async () => {
     const granted = await screenTimeService.requestAuthorization();
@@ -46,8 +48,34 @@ export default function SettingsScreen() {
     }
   };
 
+  const handleChangeName = () => {
+    Alert.prompt(
+      "Change Display Name",
+      "Enter the name you'd like to be called:",
+      [
+        { text: "Cancel", style: "cancel" },
+        { 
+          text: "Save", 
+          onPress: (name?: string) => {
+            if (name?.trim()) setDisplayName(name.trim());
+          }
+        },
+      ],
+      "plain-text",
+      displayName
+    );
+  };
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      {/* Profile Section */}
+      <Text style={styles.sectionTitle}>Profile</Text>
+      <SettingsButton
+        title="Display Name"
+        subtitle={`Current: ${displayName}`}
+        onPress={handleChangeName}
+      />
+
       {/* Screen Time Section */}
       <Text style={styles.sectionTitle}>App Blocking</Text>
 

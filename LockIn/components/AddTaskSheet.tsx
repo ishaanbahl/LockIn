@@ -17,8 +17,16 @@ import { Colors, Spacing, FontSize, BorderRadius } from "../constants/theme";
 interface AddTaskSheetProps {
   visible: boolean;
   onClose: () => void;
-  onAdd: (title: string, dueTime?: string) => void;
+  onAdd: (title: string, dueTime?: string, color?: string) => void;
 }
+
+const COLOR_PALETTE = [
+  Colors.taskColors.default,
+  Colors.taskColors.red,
+  Colors.taskColors.blue,
+  Colors.taskColors.green,
+  Colors.taskColors.yellow,
+];
 
 function formatTime(date: Date): string {
   const h = date.getHours();
@@ -36,13 +44,19 @@ export function AddTaskSheet({ visible, onClose, onAdd }: AddTaskSheetProps) {
   const [title, setTitle] = useState("");
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [selectedTime, setSelectedTime] = useState<Date | null>(null);
+  const [selectedColor, setSelectedColor] = useState<string>(Colors.taskColors.default);
 
   const handleAdd = () => {
     const trimmed = title.trim();
     if (!trimmed) return;
-    onAdd(trimmed, selectedTime ? toHHmm(selectedTime) : undefined);
+    onAdd(
+      trimmed, 
+      selectedTime ? toHHmm(selectedTime) : undefined,
+      selectedColor !== Colors.taskColors.default ? selectedColor : undefined
+    );
     setTitle("");
     setSelectedTime(null);
+    setSelectedColor(Colors.taskColors.default);
     setShowTimePicker(false);
     onClose();
   };
@@ -50,6 +64,7 @@ export function AddTaskSheet({ visible, onClose, onAdd }: AddTaskSheetProps) {
   const handleClose = () => {
     setTitle("");
     setSelectedTime(null);
+    setSelectedColor(Colors.taskColors.default);
     setShowTimePicker(false);
     onClose();
   };
@@ -76,21 +91,19 @@ export function AddTaskSheet({ visible, onClose, onAdd }: AddTaskSheetProps) {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.overlay}
       >
-        {/* Backdrop */}
         <TouchableOpacity
           style={styles.backdrop}
           activeOpacity={1}
           onPress={handleClose}
         />
 
-        {/* Sheet */}
         <View style={styles.sheet}>
           <View style={styles.handle} />
 
           <Text style={styles.heading}>Add to today's list</Text>
 
           <TextInput
-            style={styles.input}
+            style={[styles.input, { color: selectedColor }]}
             placeholder="What do you need to do today?"
             placeholderTextColor={Colors.textMuted}
             value={title}
@@ -100,7 +113,21 @@ export function AddTaskSheet({ visible, onClose, onAdd }: AddTaskSheetProps) {
             onSubmitEditing={handleAdd}
           />
 
-          {/* Time picker row */}
+          <Text style={styles.sectionLabel}>Text Color:</Text>
+          <View style={styles.colorRow}>
+            {COLOR_PALETTE.map((c) => (
+              <TouchableOpacity
+                key={c}
+                style={[
+                  styles.colorCircle,
+                  { backgroundColor: c },
+                  selectedColor === c && styles.colorCircleSelected,
+                ]}
+                onPress={() => setSelectedColor(c)}
+              />
+            ))}
+          </View>
+
           <View style={styles.timeRow}>
             <TouchableOpacity
               style={[
@@ -109,7 +136,6 @@ export function AddTaskSheet({ visible, onClose, onAdd }: AddTaskSheetProps) {
               ]}
               onPress={() => {
                 if (!selectedTime) {
-                  // Default to 11:59 PM today
                   const defaultTime = new Date();
                   defaultTime.setHours(23, 55, 0, 0);
                   setSelectedTime(defaultTime);
@@ -139,7 +165,6 @@ export function AddTaskSheet({ visible, onClose, onAdd }: AddTaskSheetProps) {
             )}
           </View>
 
-          {/* iOS inline time picker */}
           {showTimePicker && selectedTime && (
             <View style={styles.pickerContainer}>
               <DateTimePicker
@@ -149,12 +174,10 @@ export function AddTaskSheet({ visible, onClose, onAdd }: AddTaskSheetProps) {
                 onChange={handleTimeChange}
                 minuteInterval={5}
                 textColor={Colors.textPrimary}
-                themeVariant="dark"
               />
             </View>
           )}
 
-          {/* Add button — compact */}
           <TouchableOpacity
             style={[styles.addButton, !title.trim() && styles.addButtonDisabled]}
             onPress={handleAdd}
@@ -203,9 +226,33 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.surfaceLight,
     borderRadius: BorderRadius.md,
     padding: Spacing.md,
-    color: Colors.textPrimary,
     fontSize: FontSize.md,
+    fontWeight: "600",
     marginBottom: Spacing.md,
+  },
+  sectionLabel: {
+    color: Colors.textSecondary,
+    fontSize: FontSize.xs,
+    fontWeight: "700",
+    textTransform: "uppercase",
+    letterSpacing: 1,
+    marginBottom: Spacing.sm,
+  },
+  colorRow: {
+    flexDirection: "row",
+    gap: 16,
+    marginBottom: Spacing.lg,
+  },
+  colorCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    borderWidth: 2,
+    borderColor: "transparent",
+  },
+  colorCircleSelected: {
+    borderColor: Colors.border,
+    transform: [{ scale: 1.1 }],
   },
   timeRow: {
     flexDirection: "row",
@@ -224,10 +271,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary + "22",
     borderWidth: 1,
     borderColor: Colors.primary,
-  },
-  clockIcon: {
-    fontSize: FontSize.sm,
-    marginRight: Spacing.xs,
   },
   timeButtonText: {
     color: Colors.textMuted,
@@ -262,7 +305,7 @@ const styles = StyleSheet.create({
     opacity: 0.4,
   },
   addButtonText: {
-    color: Colors.surface, // White text to contrast with black button
+    color: Colors.surface,
     fontSize: FontSize.sm,
     fontWeight: "700",
   },

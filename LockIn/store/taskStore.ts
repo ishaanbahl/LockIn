@@ -10,10 +10,14 @@ interface TaskState {
 
   // Actions
   loadTasks: () => Promise<void>;
-  addTask: (title: string, dueTime?: string) => void;
+  addTask: (title: string, dueTime?: string, color?: string) => void;
   toggleTask: (id: string) => void;
   deleteTask: (id: string) => void;
   editTask: (id: string, title: string) => void;
+  editTaskTime: (id: string, dueTime?: string) => void;
+  editTaskColor: (id: string, color?: string) => void;
+  setSubtask: (id: string, isSubtask: boolean) => void;
+  insertTaskAfter: (id: string, isSubtask?: boolean, color?: string) => void;
   reorderTasks: (tasks: Task[]) => void;
   clearCompleted: () => void;
   clearAll: () => void;
@@ -40,12 +44,13 @@ export const useTaskStore = create<TaskState>((set, get) => ({
     }
   },
 
-  addTask: (title, dueTime) => {
+  addTask: (title, dueTime, color) => {
     const newTask: Task = {
       id: Date.now().toString() + Math.random().toString(36).slice(2),
       title,
       isCompleted: false,
       ...(dueTime ? { dueTime } : {}),
+      ...(color ? { color } : {}),
       createdAt: new Date().toISOString(),
     };
     set((state) => {
@@ -78,6 +83,76 @@ export const useTaskStore = create<TaskState>((set, get) => ({
       const updated = state.tasks.map((t) =>
         t.id === id ? { ...t, title } : t
       );
+      AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      return { tasks: updated };
+    });
+  },
+
+  editTaskTime: (id, dueTime) => {
+    set((state) => {
+      const updated = state.tasks.map((t) => {
+        if (t.id === id) {
+          const newTask = { ...t };
+          if (dueTime) {
+            newTask.dueTime = dueTime;
+          } else {
+            delete newTask.dueTime;
+          }
+          return newTask;
+        }
+        return t;
+      });
+      AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      return { tasks: updated };
+    });
+  },
+
+  editTaskColor: (id, color) => {
+    set((state) => {
+      const updated = state.tasks.map((t) => {
+        if (t.id === id) {
+          const newTask = { ...t };
+          if (color) {
+            newTask.color = color;
+          } else {
+            delete newTask.color;
+          }
+          return newTask;
+        }
+        return t;
+      });
+      AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      return { tasks: updated };
+    });
+  },
+
+  setSubtask: (id, isSubtask) => {
+    set((state) => {
+      const updated = state.tasks.map((t) =>
+        t.id === id ? { ...t, isSubtask } : t
+      );
+      AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      return { tasks: updated };
+    });
+  },
+
+  insertTaskAfter: (id, isSubtask = false, color) => {
+    const newTask: Task = {
+      id: Date.now().toString() + Math.random().toString(36).slice(2),
+      title: "",
+      isCompleted: false,
+      isSubtask,
+      ...(color ? { color } : {}),
+      createdAt: new Date().toISOString(),
+    };
+    set((state) => {
+      const index = state.tasks.findIndex(t => t.id === id);
+      if (index === -1) return state;
+      const updated = [
+        ...state.tasks.slice(0, index + 1),
+        newTask,
+        ...state.tasks.slice(index + 1)
+      ];
       AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
       return { tasks: updated };
     });
