@@ -32,6 +32,7 @@ export const LightColors = Colors;
 export const DarkColors = Colors;
 
 export const Spacing = {
+  xxs: 1,
   xs: 4,
   sm: 8,
   md: 16,
@@ -41,6 +42,7 @@ export const Spacing = {
 };
 
 export const FontSize = {
+  xxs: 10,
   xs: 12,
   sm: 14,
   md: 16,
@@ -51,6 +53,7 @@ export const FontSize = {
 };
 
 export const BorderRadius = {
+  xs: 4,
   sm: 8,
   md: 12,
   lg: 16,

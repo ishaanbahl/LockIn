@@ -11,7 +11,6 @@ import {
 import { useTaskStore } from "../../store/taskStore";
 import { useAppStore } from "../../store/appStore";
 import { screenTimeService } from "../../services/screenTime";
-import { requestNotificationPermissions, scheduleMorningSummary } from "../../services/notifications";
 import { Colors, Spacing, FontSize, BorderRadius } from "../../constants/theme";
 
 export default function SettingsScreen() {
@@ -20,6 +19,7 @@ export default function SettingsScreen() {
   const setDailyReset = useAppStore((s) => s.setDailyReset);
   const displayName = useAppStore((s) => s.displayName);
   const setDisplayName = useAppStore((s) => s.setDisplayName);
+  const resetOnboarding = useAppStore((s) => s.resetOnboarding);
 
   const handleScreenTimeAuth = async () => {
     const granted = await screenTimeService.requestAuthorization();
@@ -33,19 +33,6 @@ export default function SettingsScreen() {
 
   const handlePickApps = async () => {
     await screenTimeService.presentAppPicker();
-  };
-
-  const handleEnableNotifications = async () => {
-    const granted = await requestNotificationPermissions();
-    if (granted) {
-      await scheduleMorningSummary(8, 0);
-      Alert.alert("Notifications Enabled ✅", "You'll get morning summaries and task reminders.");
-    } else {
-      Alert.alert(
-        "Notifications Disabled",
-        "Enable notifications in Settings to receive task reminders."
-      );
-    }
   };
 
   const handleChangeName = () => {
@@ -90,15 +77,6 @@ export default function SettingsScreen() {
         onPress={handlePickApps}
       />
 
-      {/* Notifications Section */}
-      <Text style={styles.sectionTitle}>Notifications</Text>
-
-      <SettingsButton
-        title="Enable Reminders"
-        subtitle="Get nudged when you have incomplete tasks"
-        onPress={handleEnableNotifications}
-      />
-
       {/* Tasks Section */}
       <Text style={styles.sectionTitle}>Tasks</Text>
 
@@ -133,12 +111,30 @@ export default function SettingsScreen() {
         destructive
       />
 
+      {/* Dev / Testing */}
+      <Text style={styles.sectionTitle}>Developer</Text>
+      <SettingsButton
+        title="Reset Onboarding"
+        subtitle="Restart the onboarding flow on next launch"
+        onPress={() =>
+          Alert.alert(
+            "Reset Onboarding?",
+            "The app will show the onboarding screens on next launch.",
+            [
+              { text: "Cancel", style: "cancel" },
+              { text: "Reset", style: "destructive", onPress: resetOnboarding },
+            ]
+          )
+        }
+        destructive
+      />
+
       {/* About */}
       <Text style={styles.sectionTitle}>About</Text>
       <View style={styles.aboutCard}>
-        <Text style={styles.aboutName}>LockIn</Text>
+        <Text style={styles.aboutName}>Lok</Text>
         <Text style={styles.aboutVersion}>Version 1.0.0</Text>
-        <Text style={styles.aboutTagline}>Finish your tasks before you scroll.</Text>
+        <Text style={styles.aboutTagline}>Productivity app without the fluff.</Text>
       </View>
     </ScrollView>
   );

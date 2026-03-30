@@ -2,12 +2,11 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { router } from "expo-router";
 import { screenTimeService } from "../../services/screenTime";
-import { requestNotificationPermissions } from "../../services/notifications";
 import { Colors, Spacing, FontSize, BorderRadius } from "../../constants/theme";
+import { StepIndicator } from "../../components/StepIndicator";
 
 export default function PermissionsScreen() {
   const [screenTimeGranted, setScreenTimeGranted] = useState(false);
-  const [notificationsGranted, setNotificationsGranted] = useState(false);
 
   const handleScreenTime = async () => {
     const granted = await screenTimeService.requestAuthorization();
@@ -15,18 +14,7 @@ export default function PermissionsScreen() {
     if (!granted) {
       Alert.alert(
         "Screen Time Access",
-        "Without Screen Time access, LockIn can't block distracting apps. You can enable this later in Settings."
-      );
-    }
-  };
-
-  const handleNotifications = async () => {
-    const granted = await requestNotificationPermissions();
-    setNotificationsGranted(granted);
-    if (!granted) {
-      Alert.alert(
-        "Notifications",
-        "Without notifications, LockIn can't remind you about incomplete tasks. You can enable this later in Settings."
+        "Without Screen Time access, Lok can't block distracting apps. You can enable this later in Settings."
       );
     }
   };
@@ -37,60 +25,53 @@ export default function PermissionsScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.content}>
+      <View style={styles.topSection}>
+        <TouchableOpacity style={styles.backButton} onPress={() => router.back()} activeOpacity={0.7}>
+          <Text style={styles.backText}>←</Text>
+        </TouchableOpacity>
         <Text style={styles.title}>Permissions</Text>
         <Text style={styles.subtitle}>
-          LockIn needs a couple of permissions to work its magic.
+          Lok needs a couple of permissions to work its magic.
         </Text>
+      </View>
 
-        <View style={styles.permissions}>
+      <View style={styles.middleSection}>
+        <StepIndicator totalSteps={3} currentStep={0} />
+
+        <View style={styles.cardArea}>
           <PermissionCard
-            emoji="📵"
             title="Screen Time Access"
-            description="Lets LockIn block distracting apps until your tasks are done"
+            description="Lets Lok block distracting apps until your tasks are done"
             granted={screenTimeGranted}
             onPress={handleScreenTime}
-          />
-
-          <PermissionCard
-            emoji="🔔"
-            title="Notifications"
-            description="Reminds you when you have incomplete tasks"
-            granted={notificationsGranted}
-            onPress={handleNotifications}
           />
         </View>
       </View>
 
       <View style={styles.footer}>
-        <TouchableOpacity onPress={handleContinue} activeOpacity={0.7}>
-          <Text style={styles.skipText}>
-            {screenTimeGranted || notificationsGranted
-              ? ""
-              : "Skip for now"}
-          </Text>
-        </TouchableOpacity>
-
         <TouchableOpacity
-          style={styles.button}
+          style={[styles.button, !screenTimeGranted && styles.buttonDisabled]}
           onPress={handleContinue}
           activeOpacity={0.8}
+          disabled={!screenTimeGranted}
         >
-          <Text style={styles.buttonText}>Continue</Text>
+          <Text style={styles.buttonText}>Continue  →</Text>
         </TouchableOpacity>
+
+        {!screenTimeGranted && (
+          <TouchableOpacity onPress={handleContinue} activeOpacity={0.7}></TouchableOpacity>
+        )}
       </View>
     </View>
   );
 }
 
 function PermissionCard({
-  emoji,
   title,
   description,
   granted,
   onPress,
 }: {
-  emoji: string;
   title: string;
   description: string;
   granted: boolean;
@@ -103,13 +84,8 @@ function PermissionCard({
       activeOpacity={0.7}
       disabled={granted}
     >
-      <View style={styles.cardHeader}>
-        <Text style={styles.cardEmoji}>{emoji}</Text>
-        <View style={styles.cardContent}>
-          <Text style={styles.cardTitle}>{title}</Text>
-          <Text style={styles.cardDescription}>{description}</Text>
-        </View>
-      </View>
+      <Text style={styles.cardTitle}>{title}</Text>
+      <Text style={styles.cardDescription}>{description}</Text>
       <Text style={styles.cardStatus}>
         {granted ? "✅ Granted" : "Tap to enable"}
       </Text>
@@ -122,66 +98,78 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.background,
     padding: Spacing.lg,
-    justifyContent: "space-between",
-    paddingTop: 80,
+    paddingTop: 60,
     paddingBottom: Spacing.xxl,
   },
-  content: {},
+  topSection: {
+    marginBottom: Spacing.lg,
+  },
+  backButton: {
+    alignSelf: "flex-start",
+    marginBottom: Spacing.md,
+  },
+  backText: {
+    color: Colors.textPrimary,
+    fontSize: FontSize.xl,
+    fontWeight: "600",
+  },
   title: {
     color: Colors.textPrimary,
     fontSize: FontSize.xxl,
     fontWeight: "800",
+    fontFamily: "Didot",
     marginBottom: Spacing.sm,
   },
   subtitle: {
     color: Colors.textSecondary,
     fontSize: FontSize.md,
-    marginBottom: Spacing.xl,
   },
-  permissions: {
-    gap: Spacing.md,
+  middleSection: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  cardArea: {
+    flex: 1,
   },
   card: {
     backgroundColor: Colors.surface,
     borderRadius: BorderRadius.lg,
-    padding: Spacing.lg,
+    padding: Spacing.xl,
     borderWidth: 1,
     borderColor: Colors.border,
+    alignItems: "center",
+    justifyContent: "center",
+    minHeight: 200,
   },
   cardGranted: {
     borderColor: Colors.success,
     backgroundColor: "#00B89410",
   },
-  cardHeader: {
-    flexDirection: "row",
-    marginBottom: Spacing.sm,
-  },
-  cardEmoji: {
-    fontSize: 32,
-    marginRight: Spacing.md,
-  },
-  cardContent: {
-    flex: 1,
-  },
   cardTitle: {
     color: Colors.textPrimary,
     fontSize: FontSize.lg,
     fontWeight: "700",
-    marginBottom: 2,
+    marginBottom: Spacing.sm,
+    textAlign: "center",
   },
   cardDescription: {
     color: Colors.textSecondary,
     fontSize: FontSize.sm,
+    textAlign: "center",
+    marginBottom: Spacing.md,
+    lineHeight: 20,
   },
   cardStatus: {
     color: Colors.textMuted,
     fontSize: FontSize.sm,
     fontWeight: "600",
-    textAlign: "right",
+    textAlign: "center",
   },
   footer: {
     gap: Spacing.md,
     alignItems: "center",
+    marginTop: Spacing.lg,
   },
   skipText: {
     color: Colors.textMuted,
@@ -194,8 +182,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "stretch",
   },
+  buttonDisabled: {
+    opacity: 0.4,
+  },
   buttonText: {
-    color: Colors.textPrimary,
+    color: "#FFFFFF",
     fontSize: FontSize.lg,
     fontWeight: "700",
   },

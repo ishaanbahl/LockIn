@@ -1,24 +1,21 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { router } from "expo-router";
-import { Colors, Spacing, FontSize, BorderRadius } from "../../constants/theme";
+import { Spacing, FontSize, BorderRadius } from "../../constants/theme";
 
 export default function WelcomeScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.icon}>🔒</Text>
-        <Text style={styles.title}>LockIn</Text>
-        <Text style={styles.subtitle}>
-          Finish your tasks before you scroll.
-        </Text>
-
-        <View style={styles.features}>
-          <FeatureRow emoji="📝" text="Add your daily tasks" />
-          <FeatureRow emoji="📵" text="Distracting apps get blocked" />
-          <FeatureRow emoji="✅" text="Check everything off to unlock" />
-          <FeatureRow emoji="🎉" text="Scroll guilt-free" />
+        <View style={styles.titleRow}>
+          <Image
+            source={require('../../assets/lok-mascot.png')}
+            style={styles.mascot}
+            resizeMode="contain"
+          />
+          <Text style={styles.title}>Lok.</Text>
         </View>
+        <Text style={styles.subtitle}>Work first. Scroll Later.</Text>
       </View>
 
       <TouchableOpacity
@@ -26,17 +23,8 @@ export default function WelcomeScreen() {
         onPress={() => router.push("/(onboarding)/permissions")}
         activeOpacity={0.8}
       >
-        <Text style={styles.buttonText}>Get Started</Text>
+        <Text style={styles.buttonText}>Get Started  →</Text>
       </TouchableOpacity>
-    </View>
-  );
-}
-
-function FeatureRow({ emoji, text }: { emoji: string; text: string }) {
-  return (
-    <View style={styles.featureRow}>
-      <Text style={styles.featureEmoji}>{emoji}</Text>
-      <Text style={styles.featureText}>{text}</Text>
     </View>
   );
 }
@@ -44,60 +32,51 @@ function FeatureRow({ emoji, text }: { emoji: string; text: string }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: "#FFFFFF",
     padding: Spacing.lg,
     justifyContent: "space-between",
-    paddingTop: 100,
     paddingBottom: Spacing.xxl,
   },
   content: {
+    flex: 1,
     alignItems: "center",
+    justifyContent: "center",
   },
-  icon: {
-    fontSize: 80,
-    marginBottom: Spacing.lg,
-  },
-  title: {
-    color: Colors.primary,
-    fontSize: FontSize.hero,
-    fontWeight: "800",
-    marginBottom: Spacing.sm,
-  },
-  subtitle: {
-    color: Colors.textSecondary,
-    fontSize: FontSize.lg,
-    textAlign: "center",
-    marginBottom: Spacing.xxl,
-    fontStyle: "italic",
-  },
-  features: {
-    alignSelf: "stretch",
-    gap: Spacing.md,
-  },
-  featureRow: {
+  titleRow: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: Colors.surface,
-    borderRadius: BorderRadius.md,
-    padding: Spacing.md,
+    marginBottom: Spacing.md,
   },
-  featureEmoji: {
-    fontSize: 24,
+  mascot: {
+    width: 120,
+    height: 120,
     marginRight: Spacing.md,
   },
+  title: {
+    color: "#08542f",
+    fontSize: 72,
+    fontWeight: "800",
+    fontFamily: "Didot",
+  },
+  subtitle: {
+    color: "#8E8E93",
+    fontSize: FontSize.xs,
+    textAlign: "center",
+  },
   featureText: {
-    color: Colors.textPrimary,
+    color: "#08542f",
     fontSize: FontSize.md,
     fontWeight: "500",
+    textAlign: "center",
   },
   button: {
-    backgroundColor: Colors.primary,
+    backgroundColor: "#08542f",
     borderRadius: BorderRadius.md,
     padding: Spacing.md,
     alignItems: "center",
   },
   buttonText: {
-    color: Colors.textPrimary,
+    color: "#FFFFFF",
     fontSize: FontSize.lg,
     fontWeight: "700",
   },

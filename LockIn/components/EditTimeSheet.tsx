@@ -83,7 +83,7 @@ export function EditTimeSheet({ visible, initialTime, onClose, onSave, onRemoveT
               mode="time"
               display="spinner"
               onChange={handleTimeChange}
-              minuteInterval={5}
+              minuteInterval={1}
               textColor={Colors.textPrimary}
               themeVariant="dark" 
             />

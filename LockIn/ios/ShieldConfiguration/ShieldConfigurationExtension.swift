@@ -25,7 +25,7 @@ class ShieldConfigurationExtension: ShieldConfigurationDataSource {
         if isBypassed {
             return bypassConfig()
         }
-        return activeConfig(subtitle: "Finish your tasks before using this app.")
+        return activeConfig(subtitle: "Complete all tasks to remove this blocker.")
     }
 
     override func configuration(shielding application: Application, in category: ActivityCategory) -> ShieldConfiguration {
@@ -47,37 +47,50 @@ class ShieldConfigurationExtension: ShieldConfigurationDataSource {
 
     // MARK: - Configs
 
-    /// Normal shield — shown when tasks are incomplete
+    private func resizedImage(_ image: UIImage, to size: CGSize) -> UIImage {
+        let renderer = UIGraphicsImageRenderer(size: size)
+        return renderer.image { _ in
+            image.draw(in: CGRect(origin: .zero, size: size))
+        }
+    }
+
     private func activeConfig(subtitle: String) -> ShieldConfiguration {
+        let greenBg = UIColor(red: 8.0/255.0, green: 84.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+        let orangeBtn = UIColor(red: 255.0/255.0, green: 149.0/255.0, blue: 0.0/255.0, alpha: 1.0)
+
+        var mascotIcon: UIImage? = nil
+        if let raw = UIImage(named: "LokMascot", in: Bundle(for: type(of: self)), compatibleWith: nil) {
+            mascotIcon = resizedImage(raw, to: CGSize(width: 128, height: 128))
+        }
+
         return ShieldConfiguration(
-            backgroundBlurStyle: .systemMaterialDark,
-            backgroundColor: .black,
+            backgroundColor: greenBg,
+            icon: mascotIcon,
             title: ShieldConfiguration.Label(
-                text: "Lock In First",
+                text: "Blocked by Lok",
                 color: .white
             ),
             subtitle: ShieldConfiguration.Label(
                 text: subtitle,
-                color: .gray
+                color: UIColor(white: 0.85, alpha: 1.0)
             ),
             primaryButtonLabel: ShieldConfiguration.Label(
-                text: "OK",
+                text: "Go back",
                 color: .white
             ),
-            primaryButtonBackgroundColor: .purple,
+            primaryButtonBackgroundColor: orangeBtn,
             secondaryButtonLabel: ShieldConfiguration.Label(
-                text: "Continue Anyway",
-                color: .gray
+                text: "5 Min Scroll →",
+                color: UIColor(white: 0.7, alpha: 1.0)
             )
         )
     }
 
-    /// Bypass shield — fully opaque black screen (no blur) so the
-    /// brief .defer re-evaluation looks like a smooth dark transition
-    /// instead of flashing the white default Apple "Restricted" UI.
     private func bypassConfig() -> ShieldConfiguration {
+        let greenBg = UIColor(red: 8.0/255.0, green: 84.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+
         return ShieldConfiguration(
-            backgroundColor: .black,
+            backgroundColor: greenBg,
             title: ShieldConfiguration.Label(
                 text: " ",
                 color: .clear

@@ -8,7 +8,6 @@ interface TaskState {
   tasks: Task[];
   isLoaded: boolean;
 
-  // Actions
   loadTasks: () => Promise<void>;
   addTask: (title: string, dueTime?: string, color?: string) => void;
   toggleTask: (id: string) => void;
@@ -17,12 +16,12 @@ interface TaskState {
   editTaskTime: (id: string, dueTime?: string) => void;
   editTaskColor: (id: string, color?: string) => void;
   setSubtask: (id: string, isSubtask: boolean) => void;
+  setIndentLevel: (id: string, level: number) => void;
   insertTaskAfter: (id: string, isSubtask?: boolean, color?: string) => void;
   reorderTasks: (tasks: Task[]) => void;
   clearCompleted: () => void;
   clearAll: () => void;
 
-  // Computed helpers
   incompleteTasks: () => Task[];
   allComplete: () => boolean;
 }
@@ -35,7 +34,15 @@ export const useTaskStore = create<TaskState>((set, get) => ({
     try {
       const stored = await AsyncStorage.getItem(STORAGE_KEY);
       if (stored) {
-        set({ tasks: JSON.parse(stored), isLoaded: true });
+        const parsed: Task[] = JSON.parse(stored);
+        // Migrate: convert old isSubtask boolean to indentLevel
+        const migrated = parsed.map((t) => {
+          if (t.isSubtask && !t.indentLevel) {
+            return { ...t, indentLevel: 1, isSubtask: undefined };
+          }
+          return t;
+        });
+        set({ tasks: migrated, isLoaded: true });
       } else {
         set({ isLoaded: true });
       }
@@ -126,10 +133,22 @@ export const useTaskStore = create<TaskState>((set, get) => ({
     });
   },
 
+  // Legacy — kept for backward compat but maps to indentLevel
   setSubtask: (id, isSubtask) => {
     set((state) => {
       const updated = state.tasks.map((t) =>
-        t.id === id ? { ...t, isSubtask } : t
+        t.id === id ? { ...t, indentLevel: isSubtask ? 1 : 0, isSubtask: undefined } : t
+      );
+      AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      return { tasks: updated };
+    });
+  },
+
+  setIndentLevel: (id, level) => {
+    set((state) => {
+      const clamped = Math.max(0, level);
+      const updated = state.tasks.map((t) =>
+        t.id === id ? { ...t, indentLevel: clamped, isSubtask: undefined } : t
       );
       AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
       return { tasks: updated };
@@ -137,21 +156,22 @@ export const useTaskStore = create<TaskState>((set, get) => ({
   },
 
   insertTaskAfter: (id, isSubtask = false, color) => {
+    const parentTask = get().tasks.find((t) => t.id === id);
     const newTask: Task = {
       id: Date.now().toString() + Math.random().toString(36).slice(2),
       title: "",
       isCompleted: false,
-      isSubtask,
+      indentLevel: parentTask?.indentLevel || (isSubtask ? 1 : 0),
       ...(color ? { color } : {}),
       createdAt: new Date().toISOString(),
     };
     set((state) => {
-      const index = state.tasks.findIndex(t => t.id === id);
+      const index = state.tasks.findIndex((t) => t.id === id);
       if (index === -1) return state;
       const updated = [
         ...state.tasks.slice(0, index + 1),
         newTask,
-        ...state.tasks.slice(index + 1)
+        ...state.tasks.slice(index + 1),
       ];
       AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
       return { tasks: updated };

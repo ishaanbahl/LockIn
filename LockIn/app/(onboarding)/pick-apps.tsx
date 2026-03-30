@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { router } from "expo-router";
 import { screenTimeService } from "../../services/screenTime";
 import { Colors, Spacing, FontSize, BorderRadius } from "../../constants/theme";
+import { StepIndicator } from "../../components/StepIndicator";
 
 export default function PickAppsScreen() {
   const [hasSelected, setHasSelected] = useState(false);
@@ -10,7 +11,8 @@ export default function PickAppsScreen() {
   const handlePickApps = async () => {
     try {
       await screenTimeService.presentAppPicker();
-      setHasSelected(true);
+      const count = await screenTimeService.getBlockedAppCount();
+      setHasSelected(count > 0);
     } catch {
       // User cancelled or not available
     }
@@ -22,19 +24,26 @@ export default function PickAppsScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Pick Your Poison</Text>
+      <View style={styles.topSection}>
+        <TouchableOpacity style={styles.backButton} onPress={() => router.back()} activeOpacity={0.7}>
+          <Text style={styles.backText}>←</Text>
+        </TouchableOpacity>
+        <Text style={styles.title}>Block Apps</Text>
         <Text style={styles.subtitle}>
-          Which apps distract you the most? LockIn will block them until your
+          Which apps distract you the most? Lok will block them until your
           tasks are done.
         </Text>
+      </View>
 
-        <TouchableOpacity
+      <View style={styles.middleSection}>
+        <StepIndicator totalSteps={3} currentStep={1} />
+
+        <View style={styles.cardArea}>
+          <TouchableOpacity
           style={styles.pickerButton}
           onPress={handlePickApps}
           activeOpacity={0.7}
         >
-          <Text style={styles.pickerEmoji}>📱</Text>
           <View style={styles.pickerContent}>
             <Text style={styles.pickerTitle}>
               {hasSelected ? "Change selected apps" : "Choose apps to block"}
@@ -48,29 +57,25 @@ export default function PickAppsScreen() {
           <Text style={styles.pickerArrow}>›</Text>
         </TouchableOpacity>
 
-        <View style={styles.infoCard}>
-          <Text style={styles.infoTitle}>💡 How it works</Text>
-          <Text style={styles.infoText}>
-            When you have unchecked tasks, opening a blocked app will show your
-            task list instead. You can still choose to continue — it's a nudge,
-            not a prison.
-          </Text>
+          <View style={styles.infoCard}>
+            <Text style={styles.infoTitle}>💡 How it works</Text>
+            <Text style={styles.infoText}>
+              When you have unchecked tasks, 
+              opening a blocked app will remind you about your task list. 
+              You can still choose to continue, it's a nudge,
+              not a prison.
+            </Text>
+          </View>
         </View>
       </View>
 
       <View style={styles.footer}>
-        <TouchableOpacity onPress={handleContinue} activeOpacity={0.7}>
-          <Text style={styles.skipText}>
-            {hasSelected ? "" : "I'll do this later"}
-          </Text>
-        </TouchableOpacity>
-
         <TouchableOpacity
           style={styles.button}
           onPress={handleContinue}
           activeOpacity={0.8}
         >
-          <Text style={styles.buttonText}>Continue</Text>
+          <Text style={styles.buttonText}>Continue  →</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -82,21 +87,40 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.background,
     padding: Spacing.lg,
-    justifyContent: "space-between",
-    paddingTop: 80,
+    paddingTop: 60,
     paddingBottom: Spacing.xxl,
   },
-  content: {},
+  topSection: {
+    marginBottom: Spacing.lg,
+  },
+  backButton: {
+    alignSelf: "flex-start",
+    marginBottom: Spacing.md,
+  },
+  backText: {
+    color: Colors.textPrimary,
+    fontSize: FontSize.xl,
+    fontWeight: "600",
+  },
+  middleSection: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  cardArea: {
+    flex: 1,
+    gap: Spacing.md,
+  },
   title: {
     color: Colors.textPrimary,
     fontSize: FontSize.xxl,
     fontWeight: "800",
+    fontFamily: "Didot",
     marginBottom: Spacing.sm,
   },
   subtitle: {
     color: Colors.textSecondary,
     fontSize: FontSize.md,
-    marginBottom: Spacing.xl,
     lineHeight: 22,
   },
   pickerButton: {
@@ -163,7 +187,7 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
   },
   buttonText: {
-    color: Colors.textPrimary,
+    color: "#FFFFFF",
     fontSize: FontSize.lg,
     fontWeight: "700",
   },

@@ -7,11 +7,13 @@
 
 import Foundation
 import ManagedSettings
+import FamilyControls
 
 class ShieldActionExtension: ShieldActionDelegate {
 
     private let store = ManagedSettingsStore()
     private let appGroupID = "group.com.ishaanbahl.lockin"
+    private let selectedAppsKey = "selectedFamilyActivitySelection"
 
     // MARK: - Application Shield Actions
 
@@ -67,23 +69,46 @@ class ShieldActionExtension: ShieldActionDelegate {
     // MARK: - Bypass Logic
 
     private func bypass(completionHandler: @escaping (ShieldActionResponse) -> Void) {
-        // 1. Set bypass flag FIRST — so ShieldConfigurationExtension
-        //    returns a blank dark screen when iOS re-queries it
         if let defaults = UserDefaults(suiteName: appGroupID) {
             defaults.set(true, forKey: "shieldsBypassed")
             defaults.synchronize()
         }
 
-        // 2. Defer FIRST — iOS re-queries ShieldConfigurationExtension,
-        //    which sees the bypass flag and returns an opaque black config.
-        //    This must happen BEFORE clearing shields so iOS actually
-        //    calls our extension instead of showing its default UI.
         completionHandler(.defer)
 
-        // 3. After a brief delay (giving iOS time to render our dark config),
-        //    clear shields so the overlay dismisses entirely.
         DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 0.4) { [weak self] in
             self?.store.clearAllSettings()
+
+            // Re-apply shields after a 5-minute grace period so the user
+            // can't permanently bypass by never reopening LoK.
+            DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 300) {
+                self?.reapplyShieldsFromSaved()
+            }
+        }
+    }
+
+    // MARK: - Re-apply Shields
+
+    private func reapplyShieldsFromSaved() {
+        guard let defaults = UserDefaults(suiteName: appGroupID) else { return }
+
+        defaults.set(false, forKey: "shieldsBypassed")
+        defaults.synchronize()
+
+        if #available(iOS 16.0, *) {
+            guard let data = defaults.data(forKey: selectedAppsKey),
+                  let selection = try? JSONDecoder().decode(
+                    FamilyActivitySelection.self, from: data
+                  ) else { return }
+
+            store.shield.applications = selection.applicationTokens.isEmpty
+                ? nil : selection.applicationTokens
+
+            store.shield.applicationCategories = selection.categoryTokens.isEmpty
+                ? nil : .specific(selection.categoryTokens)
+
+            store.shield.webDomains = selection.webDomainTokens.isEmpty
+                ? nil : selection.webDomainTokens
         }
     }
 }

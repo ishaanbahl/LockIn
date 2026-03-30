@@ -7,32 +7,30 @@ import {
   TextInput,
 } from "react-native";
 import { Task } from "../types/task";
-import { Colors, Spacing, FontSize, BorderRadius } from "../constants/theme";
+import { Colors, Spacing, FontSize } from "../constants/theme";
 import { Checkbox } from "./Checkbox";
-import Animated, { 
-  useSharedValue, 
-  useAnimatedStyle, 
-  withSpring,
-  useDerivedValue,
-  runOnJS,
-  SharedValue,
-} from "react-native-reanimated";
 import { GestureDetector, Gesture } from "react-native-gesture-handler";
+import Animated, { runOnJS, SharedValue } from "react-native-reanimated";
+
+const INDENT_STEP = 28; // px per indent level
 
 interface TaskItemProps {
   task: Task;
   onToggle: () => void;
   onDelete: () => void;
-  drag?: () => void;
-  isActive?: boolean;
   onEditTime?: () => void;
   onEditTitle?: (title: string) => void;
-  onSetSubtask?: (isSubtask: boolean) => void;
-  onAddNext?: (isSubtask: boolean) => void;
+  onChangeIndent?: (delta: number) => void;
+  onAddNext?: () => void;
   onFocus?: () => void;
   onBlur?: () => void;
   isFocused?: boolean;
-  externalTranslateX?: SharedValue<number>;
+  isDragging?: boolean;
+  dragTX: SharedValue<number>;
+  dragTY: SharedValue<number>;
+  onDragStart: (id: string, ghostTop: number) => void;
+  onDragUpdate?: (tx: number, ty: number) => void;
+  onDragEnd: (tx: number, ty: number) => void;
 }
 
 function formatDueTime(hhmm: string): string {
@@ -52,40 +50,30 @@ function isTimeInPast(hhmm: string): boolean {
   return due < now;
 }
 
-const INDENT_THRESHOLD = 40;
-
-export function TaskItem({ 
-  task, 
-  onToggle, 
-  onDelete, 
-  drag, 
-  isActive, 
-  onEditTime, 
-  onEditTitle, 
-  onSetSubtask,
+export function TaskItem({
+  task,
+  onToggle,
+  onDelete,
+  onEditTime,
+  onEditTitle,
+  onChangeIndent,
   onAddNext,
   onFocus,
   onBlur,
   isFocused,
-  externalTranslateX
+  isDragging,
+  dragTX,
+  dragTY,
+  onDragStart,
+  onDragUpdate,
+  onDragEnd,
 }: TaskItemProps) {
   const [localTitle, setLocalTitle] = React.useState(task.title);
   const inputRef = React.useRef<TextInput>(null);
-  
-  const localTranslateX = useSharedValue(0);
-  
-  // Use the external drag value if provided (for reordering indent), otherwise local
-  const currentTranslateX = externalTranslateX || localTranslateX;
-
-  const isIndentThresholdMet = useDerivedValue(() => {
-    if (task.isSubtask) {
-      return currentTranslateX.value < -INDENT_THRESHOLD;
-    }
-    return currentTranslateX.value > INDENT_THRESHOLD;
-  });
+  const indentLevel = task.indentLevel || 0;
 
   React.useEffect(() => {
-    if (isFocused) {
+    if (isFocused && !inputRef.current?.isFocused()) {
       inputRef.current?.focus();
     }
   }, [isFocused]);
@@ -94,136 +82,145 @@ export function TaskItem({
     setLocalTitle(task.title);
   }, [task.title]);
 
-  // Reset localTranslateX when drag ends if no external value
-  React.useEffect(() => {
-    if (!isActive && !externalTranslateX) {
-      localTranslateX.value = withSpring(0);
-    }
-  }, [isActive, externalTranslateX]);
-
   const handleEndEditing = () => {
     onBlur?.();
     if (localTitle.trim() !== "") {
       onEditTitle?.(localTitle.trim());
     } else {
-      setLocalTitle(task.title); 
+      setLocalTitle(task.title);
     }
   };
 
-  const handleFocus = () => {
-    onFocus?.();
-  };
-
   const handleTextChange = (text: string) => {
-    if (text.startsWith("  ") && !task.isSubtask) {
+    if (text.startsWith("  ") && onChangeIndent) {
       setLocalTitle(text.replace(/^ {2}/, ""));
-      onSetSubtask?.(true);
+      onChangeIndent(1);
     } else {
       setLocalTitle(text);
     }
   };
 
   const handleKeyPress = ({ nativeEvent }: any) => {
-    if (nativeEvent.key === 'Backspace' && localTitle === '') {
-      if (task.isSubtask) {
-        onSetSubtask?.(false);
+    if (nativeEvent.key === "Backspace" && localTitle === "") {
+      if (indentLevel > 0) {
+        onChangeIndent?.(-1);
       } else {
         onDelete();
       }
     }
   };
 
-  // Local pan for potential other actions, but the main reorder indent is handled by the parent's detector
-  const panGesture = Gesture.Pan()
-    .activeOffsetX([-10, 10])
-    .onUpdate((event) => {
-      if (isActive && !externalTranslateX) {
-        localTranslateX.value = event.translationX;
-      }
-    })
-    .onEnd(() => {
-      if (isActive && !externalTranslateX && isIndentThresholdMet.value) {
-        runOnJS(onSetSubtask!)(!task.isSubtask);
-      }
-      localTranslateX.value = withSpring(0);
-    });
+  /** Only on :: handle — if the pan wraps the TextInput, taps to type briefly look "pressed"/hovered (RNGH vs native editor). */
+  const dragGesture = React.useMemo(
+    () =>
+      Gesture.Pan()
+        .activateAfterLongPress(280)
+        .minDistance(0)
+        .shouldCancelWhenOutside(false)
+        .onStart((e) => {
+          dragTX.value = 0;
+          dragTY.value = 0;
+          const ghostTop = e.absoluteY - e.y;
+          runOnJS(onDragStart)(task.id, ghostTop);
+        })
+        .onUpdate((e) => {
+          dragTX.value = e.translationX;
+          dragTY.value = e.translationY;
+          if (onDragUpdate) runOnJS(onDragUpdate)(e.translationX, e.translationY);
+        })
+        .onEnd((e) => {
+          runOnJS(onDragEnd)(e.translationX, e.translationY);
+        }),
+    [task.id, dragTX, dragTY, onDragStart, onDragUpdate, onDragEnd]
+  );
 
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ translateX: currentTranslateX.value }],
-      opacity: isActive ? 0.9 : 1,
-    };
-  });
-
-  const isNew = React.useMemo(() => {
-    return Date.now() - new Date(task.createdAt).getTime() < 1000;
-  }, [task.createdAt]);
+  const isNew = React.useMemo(
+    () => Date.now() - new Date(task.createdAt).getTime() < 1000,
+    [task.createdAt]
+  );
 
   const isPast = task.dueTime ? isTimeInPast(task.dueTime) : false;
   const currentTextColor = task.color || Colors.textPrimary;
 
   return (
-    <GestureDetector gesture={panGesture}>
-      <Animated.View style={[
+    <Animated.View
+      style={[
         styles.container,
-        task.isSubtask && styles.indentedContainer,
-        isActive && styles.containerActive,
-        animatedStyle
-      ]}>
-        <View style={styles.leftContent}>
-          <TouchableOpacity 
-            onLongPress={drag} 
-            delayLongPress={150} 
-            style={styles.dragHandle}
-            activeOpacity={0.6}
-            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-          >
+        { paddingLeft: indentLevel * INDENT_STEP },
+        isDragging && styles.dragging,
+      ]}
+    >
+      <View style={styles.leftContent}>
+        <GestureDetector gesture={dragGesture}>
+          <View style={styles.dragHandle} hitSlop={{ top: 8, bottom: 8, left: 4, right: 8 }}>
             <Text style={styles.dragHandleText}>::</Text>
-          </TouchableOpacity>
-          <Checkbox checked={task.isCompleted} onPress={onToggle} size={20} />
-          <View style={styles.titleContainer}>
-            <TextInput
-              ref={inputRef}
-              style={[
-                styles.title, 
-                { color: currentTextColor },
-                task.isCompleted && styles.titleCompleted,
-                task.isCompleted && { textDecorationLine: 'line-through' }
-              ]}
-              value={localTitle}
-              onChangeText={handleTextChange}
-              onEndEditing={handleEndEditing}
-              onFocus={handleFocus}
-              onKeyPress={handleKeyPress}
-              onSubmitEditing={() => onAddNext?.(task.isSubtask || false)}
-              blurOnSubmit={false}
-              returnKeyType="done"
-              autoFocus={isNew && task.title === ""}
-            />
           </View>
-        </View>
+        </GestureDetector>
 
-        <View style={styles.rightContent}>
-          <TouchableOpacity 
-            style={[styles.duePill, { backgroundColor: Colors.surfaceLight }]} 
-            onPress={onEditTime}
-            activeOpacity={0.6}
-            hitSlop={8}
-          >
-            {task.dueTime ? (
-              <>
-                <Text style={[styles.dueLabel, { color: Colors.textPrimary }, isPast && styles.pastDueText]}>DUE: </Text>
-                <Text style={[styles.dueTimeText, { color: Colors.textPrimary }, isPast && styles.pastDueText]}>{formatDueTime(task.dueTime)}</Text>
-              </>
-            ) : (
-              <Text style={[styles.dueTimeText, { color: Colors.textPrimary }]}>NO TIME SET</Text>
-            )}
-          </TouchableOpacity>
+        <Checkbox checked={task.isCompleted} onPress={onToggle} size={24} />
+
+        <View style={styles.titleContainer}>
+          <TextInput
+            ref={inputRef}
+            style={[
+              styles.title,
+              { color: currentTextColor },
+              task.isCompleted && styles.titleCompleted,
+              task.isCompleted && { textDecorationLine: "line-through" },
+            ]}
+            value={localTitle}
+            onChangeText={handleTextChange}
+            onEndEditing={handleEndEditing}
+            onFocus={() => onFocus?.()}
+            onKeyPress={handleKeyPress}
+            onSubmitEditing={() => onAddNext?.()}
+            blurOnSubmit={false}
+            returnKeyType="done"
+            autoFocus={isNew && task.title === ""}
+          />
         </View>
-      </Animated.View>
-    </GestureDetector>
+      </View>
+
+      <View style={styles.rightContent}>
+        <TouchableOpacity
+          style={[styles.duePill, { backgroundColor: Colors.surfaceLight }]}
+          onPress={onEditTime}
+          activeOpacity={0.6}
+          hitSlop={8}
+        >
+          {task.dueTime ? (
+            <>
+              <Text
+                style={[
+                  styles.dueLabel,
+                  { color: Colors.textPrimary },
+                  isPast && styles.pastDueText,
+                ]}
+              >
+                DUE:{" "}
+              </Text>
+              <Text
+                style={[
+                  styles.dueTimeText,
+                  { color: Colors.textPrimary },
+                  isPast && styles.pastDueText,
+                ]}
+              >
+                {formatDueTime(task.dueTime)}
+              </Text>
+            </>
+          ) : (
+            <Text style={[styles.dueTimeText, { color: Colors.textPrimary }]}>
+              NO TIME SET
+            </Text>
+          )}
+        </TouchableOpacity>
+      </View>
+    </Animated.View>
   );
 }
+
+export const INDENT_STEP_PX = INDENT_STEP;
 
 const styles = StyleSheet.create({
   container: {
@@ -231,21 +228,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     backgroundColor: "transparent",
-    paddingVertical: Spacing.xs,
+    paddingVertical: Spacing.xxs,
     paddingHorizontal: 0,
-    marginBottom: 2,
+    marginBottom: 0,
   },
-  indentedContainer: {
-    paddingLeft: INDENT_THRESHOLD - 8,
-  },
-  containerActive: {
-    transform: [{ scale: 1.02 }],
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
-    backgroundColor: "transparent",
+  dragging: {
+    opacity: 0,
   },
   leftContent: {
     flexDirection: "row",
@@ -257,10 +245,10 @@ const styles = StyleSheet.create({
     paddingRight: Spacing.sm,
     justifyContent: "center",
     opacity: 0.3,
-    paddingVertical: 10,
+    paddingVertical: 5,
   },
   dragHandleText: {
-    fontSize: FontSize.md,
+    fontSize: 18,
     color: Colors.textPrimary,
     fontWeight: "700",
     letterSpacing: -1,
@@ -271,7 +259,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   title: {
-    fontSize: FontSize.sm,
+    fontSize: FontSize.md,
     fontWeight: "600",
     padding: 0,
   },
@@ -290,14 +278,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   dueLabel: {
-    fontSize: FontSize.xs - 2,
+    fontSize: FontSize.xs,
     fontWeight: "700",
   },
   dueTimeText: {
-    fontSize: FontSize.xs - 2,
+    fontSize: FontSize.xs,
     fontWeight: "400",
   },
   pastDueText: {
-    color: Colors.danger, 
+    color: Colors.danger,
   },
 });

@@ -5,9 +5,11 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Modal,
+  Keyboard,
+  ScrollView,
   KeyboardAvoidingView,
   Platform,
-  Modal,
 } from "react-native";
 import DateTimePicker, {
   DateTimePickerEvent,
@@ -37,7 +39,10 @@ function formatTime(date: Date): string {
 }
 
 function toHHmm(date: Date): string {
-  return `${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`;
+  return `${date.getHours().toString().padStart(2, "0")}:${date
+    .getMinutes()
+    .toString()
+    .padStart(2, "0")}`;
 }
 
 export function AddTaskSheet({ visible, onClose, onAdd }: AddTaskSheetProps) {
@@ -50,29 +55,38 @@ export function AddTaskSheet({ visible, onClose, onAdd }: AddTaskSheetProps) {
     const trimmed = title.trim();
     if (!trimmed) return;
     onAdd(
-      trimmed, 
+      trimmed,
       selectedTime ? toHHmm(selectedTime) : undefined,
       selectedColor !== Colors.taskColors.default ? selectedColor : undefined
     );
-    setTitle("");
-    setSelectedTime(null);
-    setSelectedColor(Colors.taskColors.default);
-    setShowTimePicker(false);
+    reset();
     onClose();
   };
 
-  const handleClose = () => {
+  const reset = () => {
     setTitle("");
     setSelectedTime(null);
     setSelectedColor(Colors.taskColors.default);
     setShowTimePicker(false);
+  };
+
+  const handleClose = () => {
+    reset();
     onClose();
   };
 
   const handleTimeChange = (_event: DateTimePickerEvent, date?: Date) => {
-    if (date) {
-      setSelectedTime(date);
+    if (date) setSelectedTime(date);
+  };
+
+  const handleToggleTimePicker = () => {
+    Keyboard.dismiss();
+    if (!selectedTime) {
+      const d = new Date();
+      d.setHours(23, 55, 0, 0);
+      setSelectedTime(d);
     }
+    setShowTimePicker((v) => !v);
   };
 
   const handleClearTime = () => {
@@ -100,92 +114,86 @@ export function AddTaskSheet({ visible, onClose, onAdd }: AddTaskSheetProps) {
         <View style={styles.sheet}>
           <View style={styles.handle} />
 
-          <Text style={styles.heading}>Add to today's list</Text>
+          <ScrollView
+            bounces={false}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
+            <Text style={styles.heading}>Add to today's list</Text>
 
-          <TextInput
-            style={[styles.input, { color: selectedColor }]}
-            placeholder="What do you need to do today?"
-            placeholderTextColor={Colors.textMuted}
-            value={title}
-            onChangeText={setTitle}
-            autoFocus
-            returnKeyType="done"
-            onSubmitEditing={handleAdd}
-          />
+            <TextInput
+              style={[styles.input, { color: selectedColor }]}
+              placeholder="What do you need to do today?"
+              placeholderTextColor={Colors.textMuted}
+              value={title}
+              onChangeText={setTitle}
+              returnKeyType="done"
+              onSubmitEditing={handleAdd}
+            />
 
-          <Text style={styles.sectionLabel}>Text Color:</Text>
-          <View style={styles.colorRow}>
-            {COLOR_PALETTE.map((c) => (
+            <View style={styles.colorRow}>
+              {COLOR_PALETTE.map((c) => (
+                <TouchableOpacity
+                  key={c}
+                  style={[
+                    styles.colorCircle,
+                    { backgroundColor: c },
+                    selectedColor === c && styles.colorCircleSelected,
+                  ]}
+                  onPress={() => setSelectedColor(c)}
+                />
+              ))}
+            </View>
+
+            <View style={styles.timeRow}>
               <TouchableOpacity
-                key={c}
-                style={[
-                  styles.colorCircle,
-                  { backgroundColor: c },
-                  selectedColor === c && styles.colorCircleSelected,
-                ]}
-                onPress={() => setSelectedColor(c)}
-              />
-            ))}
-          </View>
-
-          <View style={styles.timeRow}>
-            <TouchableOpacity
-              style={[
-                styles.timeButton,
-                selectedTime && styles.timeButtonActive,
-              ]}
-              onPress={() => {
-                if (!selectedTime) {
-                  const defaultTime = new Date();
-                  defaultTime.setHours(23, 55, 0, 0);
-                  setSelectedTime(defaultTime);
-                }
-                setShowTimePicker(!showTimePicker);
-              }}
-              activeOpacity={0.7}
-            >
-              <Text
-                style={[
-                  styles.timeButtonText,
-                  selectedTime && styles.timeButtonTextActive,
-                ]}
-              >
-                {selectedTime ? formatTime(selectedTime) : "Set due time"}
-              </Text>
-            </TouchableOpacity>
-
-            {selectedTime && (
-              <TouchableOpacity
-                onPress={handleClearTime}
-                style={styles.clearTimeBtn}
+                style={[styles.timeButton, selectedTime && styles.timeButtonActive]}
+                onPress={handleToggleTimePicker}
                 activeOpacity={0.7}
               >
-                <Text style={styles.clearTimeText}>✕</Text>
+                <Text
+                  style={[
+                    styles.timeButtonText,
+                    selectedTime && styles.timeButtonTextActive,
+                  ]}
+                >
+                  {selectedTime ? formatTime(selectedTime) : "Set due time"}
+                </Text>
               </TouchableOpacity>
-            )}
-          </View>
 
-          {showTimePicker && selectedTime && (
-            <View style={styles.pickerContainer}>
-              <DateTimePicker
-                value={selectedTime}
-                mode="time"
-                display="spinner"
-                onChange={handleTimeChange}
-                minuteInterval={5}
-                textColor={Colors.textPrimary}
-              />
+              {selectedTime && (
+                <TouchableOpacity
+                  onPress={handleClearTime}
+                  style={styles.clearTimeBtn}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.clearTimeText}>✕</Text>
+                </TouchableOpacity>
+              )}
             </View>
-          )}
 
-          <TouchableOpacity
-            style={[styles.addButton, !title.trim() && styles.addButtonDisabled]}
-            onPress={handleAdd}
-            disabled={!title.trim()}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.addButtonText}>Add</Text>
-          </TouchableOpacity>
+            {showTimePicker && selectedTime && (
+              <View style={styles.pickerContainer}>
+                <DateTimePicker
+                  value={selectedTime}
+                  mode="time"
+                  display="spinner"
+                  onChange={handleTimeChange}
+                  minuteInterval={1}
+                  textColor={Colors.textPrimary}
+                />
+              </View>
+            )}
+
+            <TouchableOpacity
+              style={[styles.addButton, !title.trim() && styles.addButtonDisabled]}
+              onPress={handleAdd}
+              disabled={!title.trim()}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.addButtonText}>Add</Text>
+            </TouchableOpacity>
+          </ScrollView>
         </View>
       </KeyboardAvoidingView>
     </Modal>
@@ -205,48 +213,42 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.surface,
     borderTopLeftRadius: BorderRadius.xl,
     borderTopRightRadius: BorderRadius.xl,
-    padding: Spacing.lg,
-    paddingBottom: Spacing.xxl,
+    padding: Spacing.md,
+    paddingBottom: Spacing.xl,
+    maxHeight: "85%",
   },
   handle: {
-    width: 40,
+    width: 36,
     height: 4,
     borderRadius: 2,
     backgroundColor: Colors.border,
     alignSelf: "center",
-    marginBottom: Spacing.lg,
+    marginBottom: Spacing.md,
   },
   heading: {
     color: Colors.textPrimary,
-    fontSize: FontSize.xl,
+    fontSize: FontSize.lg,
     fontWeight: "700",
-    marginBottom: Spacing.lg,
+    marginBottom: Spacing.sm,
   },
   input: {
     backgroundColor: Colors.surfaceLight,
     borderRadius: BorderRadius.md,
-    padding: Spacing.md,
+    padding: Spacing.sm,
     fontSize: FontSize.md,
     fontWeight: "600",
-    marginBottom: Spacing.md,
-  },
-  sectionLabel: {
-    color: Colors.textSecondary,
-    fontSize: FontSize.xs,
-    fontWeight: "700",
-    textTransform: "uppercase",
-    letterSpacing: 1,
     marginBottom: Spacing.sm,
   },
   colorRow: {
     flexDirection: "row",
-    gap: 16,
-    marginBottom: Spacing.lg,
+    gap: 14,
+    marginBottom: Spacing.sm,
+    alignItems: "center",
   },
   colorCircle: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 26,
+    height: 26,
+    borderRadius: 13,
     borderWidth: 2,
     borderColor: "transparent",
   },
@@ -257,15 +259,15 @@ const styles = StyleSheet.create({
   timeRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: Spacing.md,
+    marginBottom: Spacing.sm,
   },
   timeButton: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: Colors.surfaceLight,
     borderRadius: BorderRadius.sm,
-    paddingVertical: Spacing.sm,
-    paddingHorizontal: Spacing.md,
+    paddingVertical: Spacing.xs,
+    paddingHorizontal: Spacing.sm,
   },
   timeButtonActive: {
     backgroundColor: Colors.primary + "22",
@@ -291,7 +293,7 @@ const styles = StyleSheet.create({
   pickerContainer: {
     backgroundColor: Colors.surfaceLight,
     borderRadius: BorderRadius.md,
-    marginBottom: Spacing.md,
+    marginBottom: Spacing.sm,
     overflow: "hidden",
   },
   addButton: {
@@ -300,6 +302,7 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.sm,
     paddingHorizontal: Spacing.lg,
     alignSelf: "flex-end",
+    marginTop: Spacing.xs,
   },
   addButtonDisabled: {
     opacity: 0.4,
