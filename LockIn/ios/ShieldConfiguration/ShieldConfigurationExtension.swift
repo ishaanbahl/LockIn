@@ -16,6 +16,7 @@ class ShieldConfigurationExtension: ShieldConfigurationDataSource {
     /// Check if the user tapped "Continue Anyway"
     private var isBypassed: Bool {
         guard let defaults = UserDefaults(suiteName: appGroupID) else { return false }
+        defaults.synchronize()
         return defaults.bool(forKey: "shieldsBypassed")
     }
 
@@ -31,6 +32,8 @@ class ShieldConfigurationExtension: ShieldConfigurationDataSource {
     override func configuration(shielding application: Application, in category: ActivityCategory) -> ShieldConfiguration {
         return configuration(shielding: application)
     }
+
+
 
     // MARK: - Web Shield
 

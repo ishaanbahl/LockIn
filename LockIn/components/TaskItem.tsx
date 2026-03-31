@@ -177,6 +177,7 @@ export function TaskItem({
             blurOnSubmit={false}
             returnKeyType="done"
             autoFocus={isNew && task.title === ""}
+            selectTextOnFocus={false}
           />
         </View>
       </View>
