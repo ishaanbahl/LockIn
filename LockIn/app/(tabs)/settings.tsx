@@ -7,6 +7,7 @@ import {
   ScrollView,
   Alert,
   Switch,
+  Linking,
 } from "react-native";
 import { useTaskStore } from "../../store/taskStore";
 import { useAppStore } from "../../store/appStore";
@@ -111,22 +112,12 @@ export default function SettingsScreen() {
         destructive
       />
 
-      {/* Dev / Testing */}
-      <Text style={styles.sectionTitle}>Developer</Text>
+      {/* Support */}
+      <Text style={styles.sectionTitle}>Support</Text>
       <SettingsButton
-        title="Reset Onboarding"
-        subtitle="Restart the onboarding flow on next launch"
-        onPress={() =>
-          Alert.alert(
-            "Reset Onboarding?",
-            "The app will show the onboarding screens on next launch.",
-            [
-              { text: "Cancel", style: "cancel" },
-              { text: "Reset", style: "destructive", onPress: resetOnboarding },
-            ]
-          )
-        }
-        destructive
+        title="Contact Developer"
+        subtitle="Report bugs, request features, or say hi"
+        onPress={() => Linking.openURL("mailto:support@lokapp.com?subject=Lok%20App%20Feedback")}
       />
 
       {/* About */}

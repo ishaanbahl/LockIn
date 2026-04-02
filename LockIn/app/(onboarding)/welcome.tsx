@@ -7,15 +7,17 @@ export default function WelcomeScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        <View style={styles.titleRow}>
-          <Image
-            source={require('../../assets/lok-mascot.png')}
-            style={styles.mascot}
-            resizeMode="contain"
-          />
-          <Text style={styles.title}>Lok.</Text>
+        <View style={styles.titleContainer}>
+          <View style={styles.titleRow}>
+            <Image
+              source={require('../../assets/lok-mascot.png')}
+              style={styles.mascot}
+              resizeMode="contain"
+            />
+            <Text style={styles.title}>Lok.</Text>
+          </View>
+          <Text style={styles.subtitle}>Work first, Scroll Later.</Text>
         </View>
-        <Text style={styles.subtitle}>Work first. Scroll Later.</Text>
       </View>
 
       <TouchableOpacity
@@ -42,14 +44,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  titleContainer: {
+    alignItems: "center",
+  },
   titleRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: Spacing.md,
+    marginBottom: Spacing.xs,
   },
   mascot: {
-    width: 120,
-    height: 120,
+    width: 110,
+    height: 110,
     marginRight: Spacing.md,
   },
   title: {
@@ -57,10 +62,14 @@ const styles = StyleSheet.create({
     fontSize: 72,
     fontWeight: "800",
     fontFamily: "Didot",
+    lineHeight: 80,
+    marginTop: 30,
   },
   subtitle: {
     color: "#8E8E93",
-    fontSize: FontSize.xs,
+    fontSize: FontSize.sm,
+    fontWeight: "600",
+    letterSpacing: 1.5,
     textAlign: "center",
   },
   featureText: {
