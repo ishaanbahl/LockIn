@@ -10,13 +10,16 @@ import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 import { Colors, Spacing, FontSize, BorderRadius } from "../constants/theme";
+import { RemovableTaskToggle } from "./RemovableTaskToggle";
 
 interface EditTimeSheetProps {
   visible: boolean;
   initialTime?: string; // HH:mm
+  initialIsClearable?: boolean;
   onClose: () => void;
-  onSave: (dueTime?: string) => void;
-  onRemoveTime: () => void;
+  onSave: (dueTime?: string, isClearable?: boolean) => void;
+  onRemoveTime: (isClearable?: boolean) => void;
+  onToggleClearable?: (isClearable: boolean) => void;
 }
 
 function parseHHmm(hhmm?: string): Date {
@@ -34,22 +37,24 @@ function toHHmm(date: Date): string {
   return `${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`;
 }
 
-export function EditTimeSheet({ visible, initialTime, onClose, onSave, onRemoveTime }: EditTimeSheetProps) {
+export function EditTimeSheet({ visible, initialTime, initialIsClearable, onClose, onSave, onRemoveTime, onToggleClearable }: EditTimeSheetProps) {
   const [selectedTime, setSelectedTime] = useState<Date>(new Date());
+  const [isClearable, setIsClearable] = useState(false);
 
   useEffect(() => {
     if (visible) {
       setSelectedTime(parseHHmm(initialTime));
+      setIsClearable(initialIsClearable || false);
     }
-  }, [visible, initialTime]);
+  }, [visible, initialTime, initialIsClearable]);
 
   const handleSave = () => {
-    onSave(toHHmm(selectedTime));
+    onSave(toHHmm(selectedTime), isClearable);
     onClose();
   };
 
   const handleClear = () => {
-    onRemoveTime();
+    onRemoveTime(isClearable);
     onClose();
   };
 
@@ -88,6 +93,15 @@ export function EditTimeSheet({ visible, initialTime, onClose, onSave, onRemoveT
               themeVariant="dark" 
             />
           </View>
+
+          <RemovableTaskToggle
+            value={isClearable}
+            onValueChange={(val) => {
+              setIsClearable(val);
+              if (onToggleClearable) onToggleClearable(val);
+            }}
+            style={{ marginBottom: Spacing.lg }}
+          />
 
           <View style={styles.actions}>
             <TouchableOpacity

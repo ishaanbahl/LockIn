@@ -15,11 +15,12 @@ import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 import { Colors, Spacing, FontSize, BorderRadius } from "../constants/theme";
+import { RemovableTaskToggle } from "./RemovableTaskToggle";
 
 interface AddTaskSheetProps {
   visible: boolean;
   onClose: () => void;
-  onAdd: (title: string, dueTime?: string, color?: string) => void;
+  onAdd: (title: string, dueTime?: string, color?: string, isClearable?: boolean) => void;
 }
 
 const COLOR_PALETTE = [
@@ -50,6 +51,7 @@ export function AddTaskSheet({ visible, onClose, onAdd }: AddTaskSheetProps) {
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [selectedTime, setSelectedTime] = useState<Date | null>(null);
   const [selectedColor, setSelectedColor] = useState<string>(Colors.taskColors.default);
+  const [isClearable, setIsClearable] = useState(false);
 
   const handleAdd = () => {
     const trimmed = title.trim();
@@ -57,7 +59,8 @@ export function AddTaskSheet({ visible, onClose, onAdd }: AddTaskSheetProps) {
     onAdd(
       trimmed,
       selectedTime ? toHHmm(selectedTime) : undefined,
-      selectedColor !== Colors.taskColors.default ? selectedColor : undefined
+      selectedColor !== Colors.taskColors.default ? selectedColor : undefined,
+      isClearable
     );
     reset();
     onClose();
@@ -68,6 +71,7 @@ export function AddTaskSheet({ visible, onClose, onAdd }: AddTaskSheetProps) {
     setSelectedTime(null);
     setSelectedColor(Colors.taskColors.default);
     setShowTimePicker(false);
+    setIsClearable(false);
   };
 
   const handleClose = () => {
@@ -131,7 +135,7 @@ export function AddTaskSheet({ visible, onClose, onAdd }: AddTaskSheetProps) {
               onSubmitEditing={handleAdd}
             />
 
-            <View style={styles.colorRow}>
+            <View style={styles.inlineRow}>
               {COLOR_PALETTE.map((c) => (
                 <TouchableOpacity
                   key={c}
@@ -143,9 +147,7 @@ export function AddTaskSheet({ visible, onClose, onAdd }: AddTaskSheetProps) {
                   onPress={() => setSelectedColor(c)}
                 />
               ))}
-            </View>
 
-            <View style={styles.timeRow}>
               <TouchableOpacity
                 style={[styles.timeButton, selectedTime && styles.timeButtonActive]}
                 onPress={handleToggleTimePicker}
@@ -171,6 +173,12 @@ export function AddTaskSheet({ visible, onClose, onAdd }: AddTaskSheetProps) {
                 </TouchableOpacity>
               )}
             </View>
+
+            <RemovableTaskToggle
+              value={isClearable}
+              onValueChange={setIsClearable}
+              style={{ marginBottom: Spacing.sm }}
+            />
 
             {showTimePicker && selectedTime && (
               <View style={styles.pickerContainer}>
@@ -239,11 +247,12 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginBottom: Spacing.sm,
   },
-  colorRow: {
+  inlineRow: {
     flexDirection: "row",
-    gap: 14,
-    marginBottom: Spacing.sm,
     alignItems: "center",
+    gap: 10,
+    marginBottom: Spacing.md,
+    flexWrap: "nowrap",
   },
   colorCircle: {
     width: 26,
@@ -256,10 +265,9 @@ const styles = StyleSheet.create({
     borderColor: Colors.border,
     transform: [{ scale: 1.1 }],
   },
-  timeRow: {
+  timeSection: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: Spacing.sm,
   },
   timeButton: {
     flexDirection: "row",

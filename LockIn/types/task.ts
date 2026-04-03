@@ -7,4 +7,5 @@ export interface Task {
   isSubtask?: boolean; // kept for backward compat with persisted data
   indentLevel?: number; // 0 = top-level, 1+ = nested
   color?: string;
+  isClearable?: boolean;
 }

@@ -1,11 +1,15 @@
 import React, { useEffect, useRef, useCallback } from "react";
-import { ActivityIndicator, View, AppState, AppStateStatus } from "react-native";
+import { AppState, AppStateStatus } from "react-native";
 import { Stack, useRouter, useSegments } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import * as SplashScreen from "expo-splash-screen";
 import { useTaskStore } from "../store/taskStore";
 import { useAppStore, checkDailyReset } from "../store/appStore";
 import { Colors } from "../constants/theme";
 import { reapplyShieldsIfNeeded } from "../modules/screen-time-module";
+
+// Keep the native splash screen visible until we are ready
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const loadTasks = useTaskStore((s) => s.loadTasks);
@@ -43,6 +47,13 @@ export default function RootLayout() {
     return () => sub.remove();
   }, []);
 
+  // Hide the native splash once everything is ready
+  useEffect(() => {
+    if (isAppReady && isLoaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [isAppReady, isLoaded]);
+
   // Redirect based on onboarding state
   useEffect(() => {
     if (!isAppReady || !isLoaded) return;
@@ -56,20 +67,9 @@ export default function RootLayout() {
     }
   }, [isAppReady, isLoaded, isOnboardingComplete, segments]);
 
-  // Show loading spinner while app state loads
+  // Don't render anything until ready — the native splash covers the screen
   if (!isAppReady || !isLoaded) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: Colors.background,
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <ActivityIndicator size="large" color={Colors.primary} />
-      </View>
-    );
+    return null;
   }
 
   return (

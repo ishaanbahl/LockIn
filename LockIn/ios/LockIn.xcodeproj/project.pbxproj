@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -74,14 +74,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		6AAC76F02F5A43B600CB6132 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		6AAC76F02F5A43B600CB6132 /* Exceptions for "ShieldConfiguration" folder in "ShieldConfiguration" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
 			target = 6AAC76DF2F5A43B600CB6132 /* ShieldConfiguration */;
 		};
-		6AAC77002F5A447500CB6132 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		6AAC77002F5A447500CB6132 /* Exceptions for "ShieldAction" folder in "ShieldAction" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -91,8 +91,30 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		6AAC76E52F5A43B600CB6132 /* ShieldConfiguration */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (6AAC76F02F5A43B600CB6132 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = ShieldConfiguration; sourceTree = "<group>"; };
-		6AAC76F82F5A447500CB6132 /* ShieldAction */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (6AAC77002F5A447500CB6132 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = ShieldAction; sourceTree = "<group>"; };
+		6AAC76E52F5A43B600CB6132 /* ShieldConfiguration */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				6AAC76F02F5A43B600CB6132 /* Exceptions for "ShieldConfiguration" folder in "ShieldConfiguration" target */,
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = ShieldConfiguration;
+			sourceTree = "<group>";
+		};
+		6AAC76F82F5A447500CB6132 /* ShieldAction */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				6AAC77002F5A447500CB6132 /* Exceptions for "ShieldAction" folder in "ShieldAction" target */,
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = ShieldAction;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */

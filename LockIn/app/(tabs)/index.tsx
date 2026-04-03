@@ -284,6 +284,7 @@ export default function TaskListScreen() {
   const editTask = useTaskStore((s) => s.editTask);
   const editTaskTime = useTaskStore((s) => s.editTaskTime);
   const editTaskColor = useTaskStore((s) => s.editTaskColor);
+  const editTaskClearable = useTaskStore((s) => s.editTaskClearable);
   const setIndentLevel = useTaskStore((s) => s.setIndentLevel);
   const insertTaskAfter = useTaskStore((s) => s.insertTaskAfter);
   const displayName = useAppStore((s) => s.displayName);
@@ -567,21 +568,25 @@ export default function TaskListScreen() {
       <AddTaskSheet
         visible={showAddSheet}
         onClose={() => setShowAddSheet(false)}
-        onAdd={(title, dueTime, color) => addTask(title, dueTime, color)}
+        onAdd={(title, dueTime, color, isClearable) => addTask(title, dueTime, color, isClearable)}
       />
 
       <EditTimeSheet
         visible={showEditTimeSheet}
         initialTime={tasks.find((t) => t.id === editingTaskId)?.dueTime}
+        initialIsClearable={tasks.find((t) => t.id === editingTaskId)?.isClearable}
         onClose={() => {
           setShowEditTimeSheet(false);
           setEditingTaskId(null);
         }}
-        onSave={(dueTime) => {
-          if (editingTaskId) editTaskTime(editingTaskId, dueTime);
+        onSave={(dueTime, isClearable) => {
+          if (editingTaskId) editTaskTime(editingTaskId, dueTime, isClearable);
         }}
-        onRemoveTime={() => {
-          if (editingTaskId) editTaskTime(editingTaskId, undefined);
+        onRemoveTime={(isClearable) => {
+          if (editingTaskId) editTaskTime(editingTaskId, undefined, isClearable);
+        }}
+        onToggleClearable={(isClearable) => {
+           if (editingTaskId) editTaskClearable(editingTaskId, isClearable);
         }}
       />
     </GestureHandlerRootView>

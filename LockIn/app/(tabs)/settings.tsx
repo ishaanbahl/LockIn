@@ -16,6 +16,7 @@ import { Colors, Spacing, FontSize, BorderRadius } from "../../constants/theme";
 
 export default function SettingsScreen() {
   const clearCompleted = useTaskStore((s) => s.clearCompleted);
+  const clearClearableTasks = useTaskStore((s) => s.clearClearableTasks);
   const isDailyResetEnabled = useAppStore((s) => s.isDailyResetEnabled);
   const setDailyReset = useAppStore((s) => s.setDailyReset);
   const displayName = useAppStore((s) => s.displayName);
@@ -42,8 +43,8 @@ export default function SettingsScreen() {
       "Enter the name you'd like to be called:",
       [
         { text: "Cancel", style: "cancel" },
-        { 
-          text: "Save", 
+        {
+          text: "Save",
           onPress: (name?: string) => {
             if (name?.trim()) setDisplayName(name.trim());
           }
@@ -112,12 +113,43 @@ export default function SettingsScreen() {
         destructive
       />
 
+      <SettingsButton
+        title="Clear Removable Tasks"
+        subtitle="Remove all tasks marked as clearable"
+        onPress={() =>
+          Alert.alert(
+            "Clear Removable Tasks?",
+            "This will remove all tasks marked as clearable.",
+            [
+              { text: "Cancel", style: "cancel" },
+              { text: "Clear", style: "destructive", onPress: clearClearableTasks },
+            ]
+          )
+        }
+        destructive
+      />
+
       {/* Support */}
       <Text style={styles.sectionTitle}>Support</Text>
       <SettingsButton
         title="Contact Developer"
         subtitle="Report bugs, request features, or say hi"
-        onPress={() => Linking.openURL("mailto:support@lokapp.com?subject=Lok%20App%20Feedback")}
+        onPress={() => Linking.openURL("mailto:ishaanbahl6200@gmail.com?subject=Lok%20App%20Feedback")}
+      />
+      <SettingsButton
+        title="Reset Onboarding"
+        subtitle="For testing: go back to the welcome screens"
+        onPress={() => {
+          Alert.alert(
+            "Reset Onboarding?",
+            "This will take you back to the welcome screen. Your tasks will not be deleted.",
+            [
+              { text: "Cancel", style: "cancel" },
+              { text: "Reset", style: "destructive", onPress: resetOnboarding },
+            ]
+          );
+        }}
+        destructive
       />
 
       {/* About */}

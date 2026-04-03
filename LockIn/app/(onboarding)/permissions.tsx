@@ -8,13 +8,26 @@ import { StepIndicator } from "../../components/StepIndicator";
 export default function PermissionsScreen() {
   const [screenTimeGranted, setScreenTimeGranted] = useState(false);
 
+  // Check if already granted on mount
+  React.useEffect(() => {
+    screenTimeService.isAuthorized().then(setScreenTimeGranted);
+  }, []);
+
   const handleScreenTime = async () => {
-    const granted = await screenTimeService.requestAuthorization();
-    setScreenTimeGranted(granted);
-    if (!granted) {
+    // Request permission
+    const requested = await screenTimeService.requestAuthorization();
+    
+    // Even if requested returns false, re-verify status (handles "already authorized" or race conditions)
+    const trulyGranted = await screenTimeService.isAuthorized();
+    const finalGranted = requested || trulyGranted;
+    
+    setScreenTimeGranted(finalGranted);
+
+    if (!finalGranted) {
       Alert.alert(
         "Screen Time Access",
-        "Without Screen Time access, Lok can't block distracting apps. You can enable this later in Settings."
+        "Without Screen Time access, Lok can't block distracting apps. You can enable this later in Settings.",
+        [{ text: "OK" }]
       );
     }
   };
@@ -59,7 +72,9 @@ export default function PermissionsScreen() {
         </TouchableOpacity>
 
         {!screenTimeGranted && (
-          <TouchableOpacity onPress={handleContinue} activeOpacity={0.7}></TouchableOpacity>
+          <TouchableOpacity onPress={handleContinue} activeOpacity={0.7}>
+            <Text style={styles.skipText}>Skip for now</Text>
+          </TouchableOpacity>
         )}
       </View>
     </View>

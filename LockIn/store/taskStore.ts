@@ -9,18 +9,20 @@ interface TaskState {
   isLoaded: boolean;
 
   loadTasks: () => Promise<void>;
-  addTask: (title: string, dueTime?: string, color?: string) => void;
+  addTask: (title: string, dueTime?: string, color?: string, isClearable?: boolean) => void;
   toggleTask: (id: string) => void;
   deleteTask: (id: string) => void;
   editTask: (id: string, title: string) => void;
-  editTaskTime: (id: string, dueTime?: string) => void;
+  editTaskTime: (id: string, dueTime?: string, isClearable?: boolean) => void;
   editTaskColor: (id: string, color?: string) => void;
+  editTaskClearable: (id: string, isClearable: boolean) => void;
   setSubtask: (id: string, isSubtask: boolean) => void;
   setIndentLevel: (id: string, level: number) => void;
   insertTaskAfter: (id: string, isSubtask?: boolean, color?: string) => void;
   reorderTasks: (tasks: Task[]) => void;
   clearCompleted: () => void;
   clearAll: () => void;
+  clearClearableTasks: () => void;
 
   incompleteTasks: () => Task[];
   allComplete: () => boolean;
@@ -51,13 +53,14 @@ export const useTaskStore = create<TaskState>((set, get) => ({
     }
   },
 
-  addTask: (title, dueTime, color) => {
+  addTask: (title, dueTime, color, isClearable) => {
     const newTask: Task = {
       id: Date.now().toString() + Math.random().toString(36).slice(2),
       title,
       isCompleted: false,
       ...(dueTime ? { dueTime } : {}),
       ...(color ? { color } : {}),
+      ...(isClearable ? { isClearable } : {}),
       createdAt: new Date().toISOString(),
     };
     set((state) => {
@@ -95,7 +98,7 @@ export const useTaskStore = create<TaskState>((set, get) => ({
     });
   },
 
-  editTaskTime: (id, dueTime) => {
+  editTaskTime: (id, dueTime, isClearable) => {
     set((state) => {
       const updated = state.tasks.map((t) => {
         if (t.id === id) {
@@ -104,6 +107,9 @@ export const useTaskStore = create<TaskState>((set, get) => ({
             newTask.dueTime = dueTime;
           } else {
             delete newTask.dueTime;
+          }
+          if (isClearable !== undefined) {
+             newTask.isClearable = isClearable;
           }
           return newTask;
         }
@@ -128,6 +134,16 @@ export const useTaskStore = create<TaskState>((set, get) => ({
         }
         return t;
       });
+      AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      return { tasks: updated };
+    });
+  },
+
+  editTaskClearable: (id, isClearable) => {
+    set((state) => {
+      const updated = state.tasks.map((t) =>
+        t.id === id ? { ...t, isClearable } : t
+      );
       AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
       return { tasks: updated };
     });
@@ -188,6 +204,14 @@ export const useTaskStore = create<TaskState>((set, get) => ({
   clearCompleted: () => {
     set((state) => {
       const updated = state.tasks.filter((t) => !t.isCompleted);
+      AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      return { tasks: updated };
+    });
+  },
+
+  clearClearableTasks: () => {
+    set((state) => {
+      const updated = state.tasks.filter((t) => !t.isClearable);
       AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
       return { tasks: updated };
     });

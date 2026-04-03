@@ -71,6 +71,9 @@ export function TaskItem({
   const [localTitle, setLocalTitle] = React.useState(task.title);
   const inputRef = React.useRef<TextInput>(null);
   const indentLevel = task.indentLevel || 0;
+  // Controlled selection to prevent iOS auto-selecting all text on focus
+  const [selection, setSelection] = React.useState<{ start: number; end: number } | undefined>(undefined);
+  const selectionReleaseTimer = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   React.useEffect(() => {
     if (isFocused && !inputRef.current?.isFocused()) {
@@ -84,6 +87,8 @@ export function TaskItem({
 
   const handleEndEditing = () => {
     onBlur?.();
+    clearTimeout(selectionReleaseTimer.current);
+    setSelection(undefined);
     if (localTitle.trim() !== "") {
       onEditTitle?.(localTitle.trim());
     } else {
@@ -171,20 +176,29 @@ export function TaskItem({
             value={localTitle}
             onChangeText={handleTextChange}
             onEndEditing={handleEndEditing}
-            onFocus={() => onFocus?.()}
+            onFocus={() => {
+              // Force cursor to end (controlled prop beats iOS auto-select)
+              const len = localTitle.length;
+              setSelection({ start: len, end: len });
+              // Release selection control so user can select freely after 200ms
+              clearTimeout(selectionReleaseTimer.current);
+              selectionReleaseTimer.current = setTimeout(() => setSelection(undefined), 200);
+              onFocus?.();
+            }}
             onKeyPress={handleKeyPress}
             onSubmitEditing={() => onAddNext?.()}
             blurOnSubmit={false}
             returnKeyType="done"
             autoFocus={isNew && task.title === ""}
             selectTextOnFocus={false}
+            selection={selection}
           />
         </View>
       </View>
 
       <View style={styles.rightContent}>
         <TouchableOpacity
-          style={[styles.duePill, { backgroundColor: Colors.surfaceLight }]}
+          style={[styles.duePill, { backgroundColor: task.isClearable ? Colors.danger + "22" : Colors.surfaceLight }]}
           onPress={onEditTime}
           activeOpacity={0.6}
           hitSlop={8}
@@ -194,7 +208,7 @@ export function TaskItem({
               <Text
                 style={[
                   styles.dueLabel,
-                  { color: Colors.textPrimary },
+                  { color: task.isClearable ? Colors.danger : Colors.textPrimary },
                   isPast && styles.pastDueText,
                 ]}
               >
@@ -203,7 +217,7 @@ export function TaskItem({
               <Text
                 style={[
                   styles.dueTimeText,
-                  { color: Colors.textPrimary },
+                  { color: task.isClearable ? Colors.danger : Colors.textPrimary },
                   isPast && styles.pastDueText,
                 ]}
               >
@@ -211,7 +225,7 @@ export function TaskItem({
               </Text>
             </>
           ) : (
-            <Text style={[styles.dueTimeText, { color: Colors.textPrimary }]}>
+            <Text style={[styles.dueTimeText, { color: task.isClearable ? Colors.danger : Colors.textPrimary }]}>
               NO TIME SET
             </Text>
           )}
