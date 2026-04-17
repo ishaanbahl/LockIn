@@ -35,6 +35,12 @@
       "expo-splash-screen",
       "@react-native-community/datetimepicker",
       "./plugins/withScreenTime"
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "edc17324-8ded-4b1f-9a7a-b7911b141c3f"
+      }
+    }
   }
 }
