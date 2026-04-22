@@ -59,7 +59,7 @@ class ShieldConfigurationExtension: ShieldConfigurationDataSource {
 
     private func activeConfig(subtitle: String) -> ShieldConfiguration {
         // Use a very dark background to blend with system dark mode and prevent edge artifacts
-        let veryDarkBg = UIColor(white: 0.07, alpha: 1.0) 
+        let forestGreenBg = UIColor(red: 34.0/255.0, green: 95.0/255.0, blue: 38.0/255.0, alpha: 1.0) 
         let orangeBtn = UIColor(red: 255.0/255.0, green: 149.0/255.0, blue: 0.0/255.0, alpha: 1.0)
 
         var mascotIcon: UIImage? = nil
@@ -68,7 +68,7 @@ class ShieldConfigurationExtension: ShieldConfigurationDataSource {
         }
 
         return ShieldConfiguration(
-            backgroundColor: veryDarkBg,
+            backgroundColor: forestGreenBg,
             icon: mascotIcon,
             title: ShieldConfiguration.Label(
                 text: "Blocked by Lok",
@@ -91,10 +91,10 @@ class ShieldConfigurationExtension: ShieldConfigurationDataSource {
     }
 
     private func bypassConfig() -> ShieldConfiguration {
-        let veryDarkBg = UIColor(white: 0.07, alpha: 1.0) 
+        let forestGreenBg = UIColor(red: 34.0/255.0, green: 95.0/255.0, blue: 38.0/255.0, alpha: 1.0) 
 
         return ShieldConfiguration(
-            backgroundColor: veryDarkBg,
+            backgroundColor: forestGreenBg,
             title: ShieldConfiguration.Label(
                 text: " ",
                 color: .clear

@@ -66,50 +66,59 @@ export default function FirstTasksScreen() {
             keyboardShouldPersistTaps="handled"
           >
             <Text style={styles.sectionTitle}>What's your name?</Text>
-          <TextInput
-            style={styles.nameInput}
-            placeholder="Your name"
-            placeholderTextColor={Colors.textMuted}
-            value={name}
-            onChangeText={setName}
-            returnKeyType="next"
+            <TextInput
+              style={styles.nameInput}
+              placeholder="Your name"
+              placeholderTextColor={Colors.textMuted}
+              value={name}
+              onChangeText={setName}
+              returnKeyType="next"
 
-          />
+            />
 
-          <Text style={[styles.sectionTitle, { marginTop: Spacing.md }]}>Your tasks</Text>
-          <Text style={styles.subtitle}>
-            Add a few tasks to get started.
-          </Text>
+            <Text style={[styles.sectionTitle, { marginTop: Spacing.md }]}>Your tasks</Text>
+            <Text style={styles.subtitle}>
+              Add a few tasks to get started.
+            </Text>
 
-          <View style={styles.taskInputs}>
-            {tasks.map((task, index) => (
-              <View key={index} style={styles.inputRow}>
-                <View style={styles.inputCheckbox}>
-                  <Text style={styles.inputNumber}>{index + 1}</Text>
+            <View style={styles.taskInputs}>
+              {tasks.map((task, index) => (
+                <View key={index} style={styles.inputRow}>
+                  <View style={styles.inputCheckbox}>
+                    <Text style={styles.inputNumber}>{index + 1}</Text>
+                  </View>
+                  <TextInput
+                    style={styles.input}
+                    placeholder={
+                      index === 0
+                        ? "e.g. Finish homework"
+                        : index === 1
+                          ? "e.g. Go to the gym"
+                          : index === 2
+                            ? "e.g. Read 20 pages"
+                            : "Another task..."
+                    }
+                    placeholderTextColor={Colors.textMuted}
+                    value={task}
+                    onChangeText={(v) => updateTask(index, v)}
+                    returnKeyType="next"
+                  />
                 </View>
-                <TextInput
-                  style={styles.input}
-                  placeholder={
-                    index === 0
-                      ? "e.g. Finish homework"
-                      : index === 1
-                      ? "e.g. Go to the gym"
-                      : index === 2
-                      ? "e.g. Read 20 pages"
-                      : "Another task..."
-                  }
-                  placeholderTextColor={Colors.textMuted}
-                  value={task}
-                  onChangeText={(v) => updateTask(index, v)}
-                  returnKeyType="next"
-                />
-              </View>
-            ))}
+              ))}
             </View>
+
           </ScrollView>
         </KeyboardAvoidingView>
       </View>
 
+      <View style={styles.featureInfoContainer}>
+        <Text style={styles.featureInfoText}>
+          {"Set due times and get notified inside the app."}
+        </Text>
+        <Text style={styles.featureInfoText}>
+          {"Designate tasks as removable to bulk clear them later."}
+        </Text>
+      </View>
       <View style={styles.footer}>
         <TouchableOpacity
           style={[styles.button, !canFinish && styles.buttonDisabled]}
@@ -121,8 +130,8 @@ export default function FirstTasksScreen() {
             {!name.trim()
               ? "Enter your name to continue"
               : filledCount === 0
-              ? "Add at least 1 task"
-              : `Lock In with ${filledCount} task${filledCount === 1 ? "" : "s"}  →`}
+                ? "Add at least 1 task"
+                : `Lock In with ${filledCount} task${filledCount === 1 ? "" : "s"}  →`}
           </Text>
         </TouchableOpacity>
       </View>
@@ -247,5 +256,18 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: FontSize.lg,
     fontWeight: "700",
+  },
+  featureInfoContainer: {
+    marginTop: Spacing.lg,
+    paddingHorizontal: Spacing.xs,
+    gap: Spacing.md,
+    width: "100%",
+  },
+  featureInfoText: {
+    color: Colors.textSecondary,
+    fontSize: FontSize.sm,
+    fontStyle: "italic",
+    lineHeight: 20,
+    textAlign: "center",
   },
 });

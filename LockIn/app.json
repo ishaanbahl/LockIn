@@ -16,9 +16,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.ishaanbahl.lockin",
-      "infoPlist": {
-        "NSUserNotificationsUsageDescription": "LockIn needs notifications to remind you about incomplete tasks."
-      }
+      "infoPlist": {}
     },
     "android": {
       "adaptiveIcon": {
@@ -31,10 +29,15 @@
     },
     "plugins": [
       "expo-router",
-      "expo-notifications",
       "expo-splash-screen",
       "@react-native-community/datetimepicker",
-      "./plugins/withScreenTime"
+      "./plugins/withScreenTime",
+      [
+        "expo-notifications",
+        {
+          "sounds": []
+        }
+      ]
     ],
     "extra": {
       "router": {},

@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Task } from "../types/task";
+import { scheduleTaskReminder, cancelTaskReminder } from "../services/notifications";
 
 const STORAGE_KEY = "lockin_tasks";
 
@@ -68,6 +69,7 @@ export const useTaskStore = create<TaskState>((set, get) => ({
       AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
       return { tasks: updated };
     });
+    if (dueTime) scheduleTaskReminder(newTask);
   },
 
   toggleTask: (id) => {
@@ -76,11 +78,18 @@ export const useTaskStore = create<TaskState>((set, get) => ({
         t.id === id ? { ...t, isCompleted: !t.isCompleted } : t
       );
       AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      const toggled = updated.find((t) => t.id === id);
+      if (toggled?.isCompleted) {
+        cancelTaskReminder(id);
+      } else if (toggled?.dueTime) {
+        scheduleTaskReminder(toggled);
+      }
       return { tasks: updated };
     });
   },
 
   deleteTask: (id) => {
+    cancelTaskReminder(id);
     set((state) => {
       const updated = state.tasks.filter((t) => t.id !== id);
       AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
@@ -116,6 +125,12 @@ export const useTaskStore = create<TaskState>((set, get) => ({
         return t;
       });
       AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      const editedTask = updated.find((t) => t.id === id);
+      if (editedTask?.dueTime) {
+        scheduleTaskReminder(editedTask);
+      } else {
+        cancelTaskReminder(id);
+      }
       return { tasks: updated };
     });
   },

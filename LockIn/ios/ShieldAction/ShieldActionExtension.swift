@@ -95,20 +95,29 @@ class ShieldActionExtension: ShieldActionDelegate {
         defaults.set(false, forKey: "shieldsBypassed")
         defaults.synchronize()
 
-        if #available(iOS 16.0, *) {
-            guard let data = defaults.data(forKey: selectedAppsKey),
-                  let selection = try? JSONDecoder().decode(
-                    FamilyActivitySelection.self, from: data
-                  ) else { return }
+        // Briefly clear shields before reapplying to force iOS
+        // to re-fetch our custom ShieldConfiguration instead of 
+        // showing the cached system hourglass
+        store.clearAllSettings()
 
-            store.shield.applications = selection.applicationTokens.isEmpty
-                ? nil : selection.applicationTokens
+        DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            guard let self = self else { return }
 
-            store.shield.applicationCategories = selection.categoryTokens.isEmpty
-                ? nil : .specific(selection.categoryTokens)
+            if #available(iOS 16.0, *) {
+                guard let data = defaults.data(forKey: self.selectedAppsKey),
+                      let selection = try? JSONDecoder().decode(
+                        FamilyActivitySelection.self, from: data
+                      ) else { return }
 
-            store.shield.webDomains = selection.webDomainTokens.isEmpty
-                ? nil : selection.webDomainTokens
+                self.store.shield.applications = selection.applicationTokens.isEmpty
+                    ? nil : selection.applicationTokens
+
+                self.store.shield.applicationCategories = selection.categoryTokens.isEmpty
+                    ? nil : .specific(selection.categoryTokens)
+
+                self.store.shield.webDomains = selection.webDomainTokens.isEmpty
+                    ? nil : selection.webDomainTokens
+            }
         }
     }
 }

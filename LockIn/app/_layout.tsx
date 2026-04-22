@@ -7,6 +7,7 @@ import { useTaskStore } from "../store/taskStore";
 import { useAppStore, checkDailyReset } from "../store/appStore";
 import { Colors } from "../constants/theme";
 import { reapplyShieldsIfNeeded } from "../modules/screen-time-module";
+import { requestNotificationPermissions, rescheduleAllReminders } from "../services/notifications";
 
 // Keep the native splash screen visible until we are ready
 SplashScreen.preventAutoHideAsync();
@@ -37,6 +38,11 @@ export default function RootLayout() {
     loadAppState();
     loadTasks().then(() => {
       checkDailyReset(clearAll);
+      // Set up notifications after tasks are loaded
+      requestNotificationPermissions().then(() => {
+        const tasks = useTaskStore.getState().tasks;
+        rescheduleAllReminders(tasks);
+      });
     });
 
     // Re-apply shields on initial launch too
@@ -83,6 +89,10 @@ export default function RootLayout() {
       >
         <Stack.Screen name="(onboarding)" />
         <Stack.Screen name="(tabs)" />
+        <Stack.Screen
+          name="features"
+          options={{ presentation: "modal", headerShown: false }}
+        />
       </Stack>
     </>
   );

@@ -13,6 +13,7 @@ import { useTaskStore } from "../../store/taskStore";
 import { useAppStore } from "../../store/appStore";
 import { screenTimeService } from "../../services/screenTime";
 import { Colors, Spacing, FontSize, BorderRadius } from "../../constants/theme";
+import { router } from "expo-router";
 
 export default function SettingsScreen() {
   const clearCompleted = useTaskStore((s) => s.clearCompleted);
@@ -63,6 +64,11 @@ export default function SettingsScreen() {
         title="Display Name"
         subtitle={`Current: ${displayName}`}
         onPress={handleChangeName}
+      />
+      <SettingsButton
+        title="App Features"
+        subtitle="See everything Lok can do"
+        onPress={() => router.push("/features")}
       />
 
       {/* Screen Time Section */}
@@ -137,21 +143,24 @@ export default function SettingsScreen() {
         onPress={() => Linking.openURL("mailto:ishaanbahl6200@gmail.com?subject=Lok%20App%20Feedback")}
       />
       <SettingsButton
-        title="Reset Onboarding"
-        subtitle="For testing: go back to the welcome screens"
-        onPress={() => {
-          Alert.alert(
-            "Reset Onboarding?",
-            "This will take you back to the welcome screen. Your tasks will not be deleted.",
-            [
-              { text: "Cancel", style: "cancel" },
-              { text: "Reset", style: "destructive", onPress: resetOnboarding },
-            ]
-          );
+        title="🔔 Test Notification"
+        subtitle="Fires a test notification in 3 seconds"
+        onPress={async () => {
+          const Notifications = require("expo-notifications");
+          await Notifications.scheduleNotificationAsync({
+            content: {
+              title: "Task Reminder ⏰",
+              body: "This is a test notification from Lok!",
+              sound: true,
+            },
+            trigger: {
+              type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+              seconds: 3,
+            },
+          });
+          Alert.alert("Scheduled!", "A test notification will appear in 3 seconds. Minimize the app to see it.");
         }}
-        destructive
       />
-
       {/* About */}
       <Text style={styles.sectionTitle}>About</Text>
       <View style={styles.aboutCard}>
