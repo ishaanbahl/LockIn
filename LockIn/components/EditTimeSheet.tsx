@@ -40,16 +40,23 @@ function toHHmm(date: Date): string {
 export function EditTimeSheet({ visible, initialTime, initialIsClearable, onClose, onSave, onRemoveTime, onToggleClearable }: EditTimeSheetProps) {
   const [selectedTime, setSelectedTime] = useState<Date>(new Date());
   const [isClearable, setIsClearable] = useState(false);
+  // Track whether the user actually interacted with the time picker.
+  // Without this, closing the sheet after only toggling "removable" would
+  // silently set the task's dueTime to the picker's default value.
+  const [timeTouched, setTimeTouched] = useState(false);
 
   useEffect(() => {
     if (visible) {
       setSelectedTime(parseHHmm(initialTime));
       setIsClearable(initialIsClearable || false);
+      setTimeTouched(false);
     }
   }, [visible, initialTime, initialIsClearable]);
 
   const handleSave = () => {
-    onSave(toHHmm(selectedTime), isClearable);
+    // Only emit a dueTime if the user either started with one or explicitly touched the picker.
+    const shouldSaveTime = !!initialTime || timeTouched;
+    onSave(shouldSaveTime ? toHHmm(selectedTime) : undefined, isClearable);
     onClose();
   };
 
@@ -61,6 +68,7 @@ export function EditTimeSheet({ visible, initialTime, initialIsClearable, onClos
   const handleTimeChange = (_event: DateTimePickerEvent, date?: Date) => {
     if (date) {
       setSelectedTime(date);
+      setTimeTouched(true);
     }
   };
 

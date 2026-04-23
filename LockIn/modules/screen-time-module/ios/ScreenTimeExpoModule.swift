@@ -135,10 +135,21 @@ public class ScreenTimeExpoModule: Module {
                 guard let defaults = UserDefaults(suiteName: self.appGroupID) else { return false }
 
                 if defaults.bool(forKey: "shieldsBypassed") {
-                    // Clear the flag
+                    // Clear the flag regardless — bypass is a one-time nudge
                     defaults.set(false, forKey: "shieldsBypassed")
 
-                    // Re-apply shields
+                    // Only re-apply shields if there are still incomplete tasks.
+                    // Otherwise the user finished everything during the grace
+                    // period and apps should stay unblocked.
+                    let incompleteCount = defaults.integer(forKey: "incompleteTaskCount")
+                    if incompleteCount <= 0 {
+                        self.store.shield.applications = nil
+                        self.store.shield.applicationCategories = nil
+                        self.store.shield.webDomains = nil
+                        print("[ScreenTime] Bypass cleared, no tasks — staying unblocked")
+                        return false
+                    }
+
                     guard let selection = self.loadSelection() else { return false }
 
                     self.store.shield.applications = selection.applicationTokens.isEmpty

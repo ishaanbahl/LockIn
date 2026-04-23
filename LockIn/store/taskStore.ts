@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Task } from "../types/task";
-import { scheduleTaskReminder, cancelTaskReminder } from "../services/notifications";
+import { scheduleTaskReminder, cancelTaskReminder, rescheduleAllReminders } from "../services/notifications";
 
 const STORAGE_KEY = "lockin_tasks";
 
@@ -69,7 +69,8 @@ export const useTaskStore = create<TaskState>((set, get) => ({
       AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
       return { tasks: updated };
     });
-    if (dueTime) scheduleTaskReminder(newTask);
+    // Schedule after set so get().tasks includes the new task
+    if (dueTime) scheduleTaskReminder(newTask, get().tasks);
   },
 
   toggleTask: (id) => {
@@ -78,23 +79,27 @@ export const useTaskStore = create<TaskState>((set, get) => ({
         t.id === id ? { ...t, isCompleted: !t.isCompleted } : t
       );
       AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-      const toggled = updated.find((t) => t.id === id);
-      if (toggled?.isCompleted) {
-        cancelTaskReminder(id);
-      } else if (toggled?.dueTime) {
-        scheduleTaskReminder(toggled);
-      }
       return { tasks: updated };
     });
+    // Re-schedule the group for this task's due time after state is updated
+    const toggled = get().tasks.find((t) => t.id === id);
+    if (toggled?.dueTime) {
+      // Whether now complete or not, rebuild the group (completed ones are excluded inside)
+      rescheduleAllReminders(get().tasks);
+    }
   },
 
   deleteTask: (id) => {
-    cancelTaskReminder(id);
+    const deletedTask = get().tasks.find((t) => t.id === id);
     set((state) => {
       const updated = state.tasks.filter((t) => t.id !== id);
       AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
       return { tasks: updated };
     });
+    // Rebuild the group for that time slot without the deleted task
+    if (deletedTask?.dueTime) {
+      cancelTaskReminder(id, deletedTask.dueTime, get().tasks);
+    }
   },
 
   editTask: (id, title) => {
@@ -108,6 +113,7 @@ export const useTaskStore = create<TaskState>((set, get) => ({
   },
 
   editTaskTime: (id, dueTime, isClearable) => {
+    const oldDueTime = get().tasks.find((t) => t.id === id)?.dueTime;
     set((state) => {
       const updated = state.tasks.map((t) => {
         if (t.id === id) {
@@ -118,21 +124,29 @@ export const useTaskStore = create<TaskState>((set, get) => ({
             delete newTask.dueTime;
           }
           if (isClearable !== undefined) {
-             newTask.isClearable = isClearable;
+            newTask.isClearable = isClearable;
+            // Keep color in sync — removable tasks render in purple, no custom color.
+            if (isClearable) {
+              delete newTask.color;
+            }
           }
           return newTask;
         }
         return t;
       });
       AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-      const editedTask = updated.find((t) => t.id === id);
-      if (editedTask?.dueTime) {
-        scheduleTaskReminder(editedTask);
-      } else {
-        cancelTaskReminder(id);
-      }
       return { tasks: updated };
     });
+    const allTasks = get().tasks;
+    const editedTask = allTasks.find((t) => t.id === id);
+    if (editedTask?.dueTime) {
+      // Schedule new time group
+      scheduleTaskReminder(editedTask, allTasks);
+    }
+    // If the due time changed, clean up the old group too
+    if (oldDueTime && oldDueTime !== dueTime) {
+      cancelTaskReminder(id, oldDueTime, allTasks);
+    }
   },
 
   editTaskColor: (id, color) => {
@@ -156,9 +170,18 @@ export const useTaskStore = create<TaskState>((set, get) => ({
 
   editTaskClearable: (id, isClearable) => {
     set((state) => {
-      const updated = state.tasks.map((t) =>
-        t.id === id ? { ...t, isClearable } : t
-      );
+      const updated = state.tasks.map((t) => {
+        if (t.id !== id) return t;
+        const next: Task = { ...t, isClearable };
+        // When marking a task as removable, strip any custom color so the
+        // UI can render it in the dedicated "removable" purple. When
+        // un-marking, leave whatever color the user had — they'll pick
+        // a new one via the color toolbar.
+        if (isClearable) {
+          delete next.color;
+        }
+        return next;
+      });
       AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
       return { tasks: updated };
     });

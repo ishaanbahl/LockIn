@@ -58,8 +58,7 @@ class ShieldConfigurationExtension: ShieldConfigurationDataSource {
     }
 
     private func activeConfig(subtitle: String) -> ShieldConfiguration {
-        // Use a very dark background to blend with system dark mode and prevent edge artifacts
-        let forestGreenBg = UIColor(red: 34.0/255.0, green: 95.0/255.0, blue: 38.0/255.0, alpha: 1.0) 
+        let forestGreenBg = UIColor(red: 8.0/255.0, green: 84.0/255.0, blue: 47.0/255.0, alpha: 1.0)
         let orangeBtn = UIColor(red: 255.0/255.0, green: 149.0/255.0, blue: 0.0/255.0, alpha: 1.0)
 
         var mascotIcon: UIImage? = nil
@@ -91,7 +90,7 @@ class ShieldConfigurationExtension: ShieldConfigurationDataSource {
     }
 
     private func bypassConfig() -> ShieldConfiguration {
-        let forestGreenBg = UIColor(red: 34.0/255.0, green: 95.0/255.0, blue: 38.0/255.0, alpha: 1.0) 
+        let forestGreenBg = UIColor(red: 8.0/255.0, green: 84.0/255.0, blue: 47.0/255.0, alpha: 1.0)
 
         return ShieldConfiguration(
             backgroundColor: forestGreenBg,

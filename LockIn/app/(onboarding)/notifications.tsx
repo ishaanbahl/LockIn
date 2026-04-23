@@ -1,39 +1,36 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { router } from "expo-router";
-import { screenTimeService } from "../../services/screenTime";
+import * as Notifications from "expo-notifications";
+import { requestNotificationPermissions } from "../../services/notifications";
 import { Colors, Spacing, FontSize, BorderRadius } from "../../constants/theme";
 import { StepIndicator } from "../../components/StepIndicator";
 
-export default function PermissionsScreen() {
-  const [screenTimeGranted, setScreenTimeGranted] = useState(false);
+export default function NotificationsOnboardingScreen() {
+  const [notificationsGranted, setNotificationsGranted] = useState(false);
 
-  // Check if already granted on mount
+  // Check current status on mount — if user already granted, skip the prompt flow
   React.useEffect(() => {
-    screenTimeService.isAuthorized().then(setScreenTimeGranted);
+    Notifications.getPermissionsAsync().then(({ status }) => {
+      setNotificationsGranted(status === "granted");
+    });
   }, []);
 
-  const handleScreenTime = async () => {
-    // Request permission
-    const requested = await screenTimeService.requestAuthorization();
-    
-    // Even if requested returns false, re-verify status (handles "already authorized" or race conditions)
-    const trulyGranted = await screenTimeService.isAuthorized();
-    const finalGranted = requested || trulyGranted;
-    
-    setScreenTimeGranted(finalGranted);
+  const handleRequest = async () => {
+    const granted = await requestNotificationPermissions();
+    setNotificationsGranted(granted);
 
-    if (!finalGranted) {
+    if (!granted) {
       Alert.alert(
-        "Screen Time Access",
-        "Without Screen Time access, Lok can't block distracting apps. You can enable this later in Settings.",
+        "Notifications",
+        "Without notifications, Lok can't remind you about tasks or send your morning summary. You can enable them later in Settings.",
         [{ text: "OK" }]
       );
     }
   };
 
   const handleContinue = () => {
-    router.push("/(onboarding)/notifications");
+    router.push("/(onboarding)/pick-apps");
   };
 
   return (
@@ -42,69 +39,50 @@ export default function PermissionsScreen() {
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()} activeOpacity={0.7}>
           <Text style={styles.backText}>←</Text>
         </TouchableOpacity>
-        <Text style={styles.title}>Permissions</Text>
+        <Text style={styles.title}>Notifications</Text>
         <Text style={styles.subtitle}>
-          Lok needs a couple of permissions to work its magic.
+          Lok sends a morning summary and reminders before tasks are due.
         </Text>
       </View>
 
       <View style={styles.middleSection}>
-        <StepIndicator totalSteps={4} currentStep={0} />
+        <StepIndicator totalSteps={4} currentStep={1} />
 
         <View style={styles.cardArea}>
-          <PermissionCard
-            title="Screen Time Access"
-            description="Lets Lok block distracting apps until your tasks are done"
-            granted={screenTimeGranted}
-            onPress={handleScreenTime}
-          />
+          <TouchableOpacity
+            style={[styles.card, notificationsGranted && styles.cardGranted]}
+            onPress={handleRequest}
+            activeOpacity={0.7}
+            disabled={notificationsGranted}
+          >
+            <Text style={styles.cardTitle}>Allow Notifications</Text>
+            <Text style={styles.cardDescription}>
+              Lok will send you reminders before your tasks are due.
+            </Text>
+            <Text style={styles.cardStatus}>
+              {notificationsGranted ? "✅ Granted" : "Tap to enable"}
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
 
       <View style={styles.footer}>
         <TouchableOpacity
-          style={[styles.button, !screenTimeGranted && styles.buttonDisabled]}
+          style={[styles.button, !notificationsGranted && styles.buttonDisabled]}
           onPress={handleContinue}
           activeOpacity={0.8}
-          disabled={!screenTimeGranted}
+          disabled={!notificationsGranted}
         >
           <Text style={styles.buttonText}>Continue  →</Text>
         </TouchableOpacity>
 
-        {!screenTimeGranted && (
+        {!notificationsGranted && (
           <TouchableOpacity onPress={handleContinue} activeOpacity={0.7}>
             <Text style={styles.skipText}>Skip for now</Text>
           </TouchableOpacity>
         )}
       </View>
     </View>
-  );
-}
-
-function PermissionCard({
-  title,
-  description,
-  granted,
-  onPress,
-}: {
-  title: string;
-  description: string;
-  granted: boolean;
-  onPress: () => void;
-}) {
-  return (
-    <TouchableOpacity
-      style={[styles.card, granted && styles.cardGranted]}
-      onPress={onPress}
-      activeOpacity={0.7}
-      disabled={granted}
-    >
-      <Text style={styles.cardTitle}>{title}</Text>
-      <Text style={styles.cardDescription}>{description}</Text>
-      <Text style={styles.cardStatus}>
-        {granted ? "✅ Granted" : "Tap to enable"}
-      </Text>
-    </TouchableOpacity>
   );
 }
 

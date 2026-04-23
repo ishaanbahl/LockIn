@@ -145,7 +145,10 @@ export function TaskItem({
   );
 
   const isPast = task.dueTime ? isTimeInPast(task.dueTime) : false;
-  const currentTextColor = task.color || Colors.textPrimary;
+  // Removable tasks render in purple; otherwise use the task's color or default.
+  const currentTextColor = task.isClearable
+    ? Colors.purple
+    : task.color || Colors.textPrimary;
 
   return (
     <Animated.View
@@ -198,7 +201,7 @@ export function TaskItem({
 
       <View style={styles.rightContent}>
         <TouchableOpacity
-          style={[styles.duePill, { backgroundColor: task.isClearable ? Colors.danger + "22" : Colors.surfaceLight }]}
+          style={[styles.duePill, { backgroundColor: Colors.surfaceLight }]}
           onPress={onEditTime}
           activeOpacity={0.6}
           hitSlop={8}
@@ -208,7 +211,7 @@ export function TaskItem({
               <Text
                 style={[
                   styles.dueLabel,
-                  { color: task.isClearable ? Colors.danger : Colors.textPrimary },
+                  { color: Colors.textPrimary },
                   isPast && styles.pastDueText,
                 ]}
               >
@@ -217,7 +220,7 @@ export function TaskItem({
               <Text
                 style={[
                   styles.dueTimeText,
-                  { color: task.isClearable ? Colors.danger : Colors.textPrimary },
+                  { color: Colors.textPrimary },
                   isPast && styles.pastDueText,
                 ]}
               >
@@ -225,7 +228,7 @@ export function TaskItem({
               </Text>
             </>
           ) : (
-            <Text style={[styles.dueTimeText, { color: task.isClearable ? Colors.danger : Colors.textPrimary }]}>
+            <Text style={[styles.dueTimeText, { color: Colors.textPrimary }]}>
               NO TIME SET
             </Text>
           )}

@@ -95,6 +95,14 @@ class ShieldActionExtension: ShieldActionDelegate {
         defaults.set(false, forKey: "shieldsBypassed")
         defaults.synchronize()
 
+        // If the user finished all tasks during the 5-minute grace period,
+        // don't re-apply shields — apps should stay unblocked.
+        let incompleteCount = defaults.integer(forKey: "incompleteTaskCount")
+        if incompleteCount <= 0 {
+            store.clearAllSettings()
+            return
+        }
+
         // Briefly clear shields before reapplying to force iOS
         // to re-fetch our custom ShieldConfiguration instead of 
         // showing the cached system hourglass

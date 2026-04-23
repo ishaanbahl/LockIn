@@ -22,7 +22,6 @@ export default function SettingsScreen() {
   const setDailyReset = useAppStore((s) => s.setDailyReset);
   const displayName = useAppStore((s) => s.displayName);
   const setDisplayName = useAppStore((s) => s.setDisplayName);
-  const resetOnboarding = useAppStore((s) => s.resetOnboarding);
 
   const handleScreenTimeAuth = async () => {
     const granted = await screenTimeService.requestAuthorization();
@@ -142,25 +141,7 @@ export default function SettingsScreen() {
         subtitle="Report bugs, request features, or say hi"
         onPress={() => Linking.openURL("mailto:ishaanbahl6200@gmail.com?subject=Lok%20App%20Feedback")}
       />
-      <SettingsButton
-        title="🔔 Test Notification"
-        subtitle="Fires a test notification in 3 seconds"
-        onPress={async () => {
-          const Notifications = require("expo-notifications");
-          await Notifications.scheduleNotificationAsync({
-            content: {
-              title: "Task Reminder ⏰",
-              body: "This is a test notification from Lok!",
-              sound: true,
-            },
-            trigger: {
-              type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
-              seconds: 3,
-            },
-          });
-          Alert.alert("Scheduled!", "A test notification will appear in 3 seconds. Minimize the app to see it.");
-        }}
-      />
+
       {/* About */}
       <Text style={styles.sectionTitle}>About</Text>
       <View style={styles.aboutCard}>

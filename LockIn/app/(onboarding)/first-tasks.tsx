@@ -53,7 +53,7 @@ export default function FirstTasksScreen() {
 
       <View style={styles.middleRow}>
         <View style={styles.stepColumn}>
-          <StepIndicator totalSteps={3} currentStep={2} />
+          <StepIndicator totalSteps={4} currentStep={3} />
         </View>
 
         <KeyboardAvoidingView

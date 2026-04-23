@@ -322,9 +322,15 @@ export default function TaskListScreen() {
   }, [allDone, incompleteTasks.length, isLoaded]);
 
   // ── color toolbar ──────────────────────────────────────────────────────
+  const focusedTask =
+    focusedTaskId && focusedTaskId !== "quickadd"
+      ? tasks.find((t) => t.id === focusedTaskId)
+      : undefined;
+  // Don't show the color toolbar for removable tasks — they're locked to purple.
+  const showColorToolbar = !!focusedTaskId && !focusedTask?.isClearable;
   const activeColor = focusedTaskId === "quickadd"
     ? quickAddColor
-    : tasks.find((t) => t.id === focusedTaskId)?.color || Colors.taskColors.default;
+    : focusedTask?.color || Colors.taskColors.default;
 
   const handleColorSelect = useCallback((color: string) => {
     if (focusedTaskId === "quickadd") {
@@ -530,13 +536,14 @@ export default function TaskListScreen() {
         </View>
       )}
 
-      {/* Color toolbar — always mounted; opacity avoids mount/unmount flash on focus */}
+      {/* Color toolbar — always mounted; opacity avoids mount/unmount flash on focus.
+          Hidden entirely for removable tasks since their color is locked to purple. */}
       <View
         style={[
           styles.colorToolbar,
-          { top: insets.top + Spacing.lg, opacity: focusedTaskId ? 1 : 0 },
+          { top: insets.top + Spacing.lg, opacity: showColorToolbar ? 1 : 0 },
         ]}
-        pointerEvents={focusedTaskId ? "auto" : "none"}
+        pointerEvents={showColorToolbar ? "auto" : "none"}
       >
         {COLOR_PALETTE.map((c) => (
           <TouchableOpacity

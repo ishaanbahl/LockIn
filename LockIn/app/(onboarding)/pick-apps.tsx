@@ -36,7 +36,7 @@ export default function PickAppsScreen() {
       </View>
 
       <View style={styles.middleSection}>
-        <StepIndicator totalSteps={3} currentStep={1} />
+        <StepIndicator totalSteps={4} currentStep={2} />
 
         <View style={styles.cardArea}>
           <TouchableOpacity

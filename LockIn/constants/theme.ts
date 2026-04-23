@@ -11,6 +11,7 @@ export const Colors = {
   success: "#34C759",
   danger: "#FF3B30",
   warning: "#FF9500",
+  purple: "#AF52DE",
 
   // Text
   textPrimary: "#000000",

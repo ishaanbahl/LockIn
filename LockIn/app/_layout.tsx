@@ -38,11 +38,16 @@ export default function RootLayout() {
     loadAppState();
     loadTasks().then(() => {
       checkDailyReset(clearAll);
-      // Set up notifications after tasks are loaded
-      requestNotificationPermissions().then(() => {
-        const tasks = useTaskStore.getState().tasks;
-        rescheduleAllReminders(tasks);
-      });
+      // Only request notification permissions + reschedule for users who
+      // have already completed onboarding. New users go through the
+      // notifications onboarding page which handles the permission prompt.
+      const { isOnboardingComplete: onboarded } = useAppStore.getState();
+      if (onboarded) {
+        requestNotificationPermissions().then(() => {
+          const tasks = useTaskStore.getState().tasks;
+          rescheduleAllReminders(tasks);
+        });
+      }
     });
 
     // Re-apply shields on initial launch too
