@@ -146,7 +146,7 @@ export default function SettingsScreen() {
       <Text style={styles.sectionTitle}>About</Text>
       <View style={styles.aboutCard}>
         <Text style={styles.aboutName}>Lok</Text>
-        <Text style={styles.aboutVersion}>Version 1.0.0</Text>
+        <Text style={styles.aboutVersion}>Version 1.0.1</Text>
         <Text style={styles.aboutTagline}>Productivity app without the fluff.</Text>
       </View>
     </ScrollView>
