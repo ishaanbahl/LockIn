@@ -16,7 +16,8 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.ishaanbahl.lockin",
-      "infoPlist": {}
+      "infoPlist": {},
+      "buildNumber": "8"
     },
     "android": {
       "adaptiveIcon": {
