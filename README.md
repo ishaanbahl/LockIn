@@ -14,9 +14,9 @@ How it works:
 4. Once your tasks are done, all apps will open fully. You're done for the day, feel free to doom scroll if you want to. 
 
 Features:  
-• Block any app until tasks are done 
-• Task reminders and a daily 7 AM morning summary 
-• Color-code and organize your tasks 
-• Indent tasks to create subtasks 
-• Set due times with 1-hour and 5-minute reminders 
-• Clean, minimal design built for focus
+• Block any app until tasks are done. 
+• Task reminders and a daily 7 AM morning summary. 
+• Color-code and organize your tasks.  
+• Indent tasks to create subtasks.  
+• Set due times with 1-hour and 5-minute reminders.  
+• Clean, minimal design built for focus. 
